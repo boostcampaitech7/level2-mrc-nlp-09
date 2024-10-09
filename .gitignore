@@ -1,13 +1,41 @@
-# Python bytecode
-__pycache__/
-*.py[cod]
-
-data/
-code/outputs/
-code/models/
-code/assets/
-
+# 사용자 홈 디렉토리 관련 파일
+.bash_history
+.ssh/
 .cache/
-*.bash_history
-.gitconfig
-.ssh
+.local/
+.ipython/
+.jupyter/
+.bashrc
+
+# 가상환경 폴더
+.conda/
+miniconda3/
+venv/
+donghun_env/
+
+# 캐시 파일
+__pycache__/
+*.pyc
+
+# Jupyter 체크포인트
+.ipynb_checkpoints/
+
+# 설정 파일 및 환경 파일
+*.env
+
+# 프로젝트 생성 스크립트
+setup_project.py
+
+# 데이터 및 대용량 파일
+data/raw/
+data/processed/
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+
+# 모델 파일 제외
+models/*.pt
+models/*.h5
+models/*.ckpt
+!models/.gitkeep
+
