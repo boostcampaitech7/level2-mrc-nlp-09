@@ -1,0 +1,5 @@
+# 로깅 설정
+logging:
+  level: "DEBUG"           # 로그 레벨: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  file: "logs/training.log"     # 로그 파일 경로
+  format: "%(asctime)s %(levelname)s %(message)s"  # 로그 출력 형식

@@ -1,0 +1,16 @@
+# 사용자 홈 디렉토리 관련 파일 제외
+.cache/
+.nv/
+.ssh/
+.bash_history
+.bashrc
+
+# 가상환경 폴더 제외
+.conda/
+miniconda3/
+
+# 데이터 파일 제외
+data/raw/
+
+# 모델 파일 제외
+models/
