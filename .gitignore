@@ -10,5 +10,9 @@
 miniconda3/
 
 # 데이터 파일 제외
-data/
+data/raw/*
+data/preprocessed/*
+data/external/*
 !data/raw/.gitkeep
+!data/preprocessed/.gitkeep
+!data/external/.gitkeep
