@@ -10,21 +10,29 @@
 
 .git
 .ssh
+
 code
+
 data/external/*
 data/preprocessed/*
 data/raw/*
 !data/external/.gitkeep
 !data/preprocessed/.gitkeep
 !data/raw/.gitkeep
+
 models/*
 !models/.gitkeep
+
 outputs/*
 !outputs/.gitkeep
+
 src/__pycache__
+
 tests/*
 
 *.json
 *.arrow
+*.txt
+*.csv
 code.tar.gz
 data.tar.gz
