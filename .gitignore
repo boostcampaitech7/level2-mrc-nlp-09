@@ -17,6 +17,9 @@ data/external/*
 !data/preprocessed/.gitkeep
 !data/external/.gitkeep
 
+# 개인 데이터 파일
+data/raw_0/*
+
 # 모델 파일 제외
 models/*
 !models/.gitkeep
@@ -27,3 +30,6 @@ outputs/*
 
 # 소스코드 캐시 파일 제외
 src/__pycache__
+
+# 개인 가상환경 파일
+# environment.yml
