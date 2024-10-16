@@ -13,6 +13,8 @@ miniconda3/
 data/raw/*
 data/preprocessed/*
 data/external/*
+data/processed
+data/raw copy
 !data/raw/.gitkeep
 !data/preprocessed/.gitkeep
 !data/external/.gitkeep
@@ -27,3 +29,9 @@ outputs/*
 
 # 소스코드 캐시 파일 제외
 src/__pycache__
+
+.sudo_as_admin_successful
+.local/
+.bash_profile
+
+aistage

@@ -12,10 +12,46 @@ import pandas as pd
 from datasets import Dataset, concatenate_datasets, load_from_disk
 from sklearn.feature_extraction.text import TfidfVectorizer
 from tqdm.auto import tqdm
+from konlpy.tag import Kkma
+
+# from ..scripts.QueryPreprocessor import QueryPreprocessor
 
 seed = 2024
 random.seed(seed) # python random seed 고정
 np.random.seed(seed) # numpy random seed 고정
+
+
+class QueryPreprocessor:
+    """
+    Query 전처리 모듈화 클래스
+    전처리 방법을 모듈화하고, 전처리를 사용할지 여부를 제어할 수 있습니다.
+    """
+    def __init__(self):
+        self.kkma = Kkma()
+
+    def preprocess(self, query: str) -> str:
+        """
+        Query에 대한 전처리 작업을 수행하는 함수.
+        형태소 분석을 통해 의미 있는 태그(명사, 동사, 형용사 등)를 추출하고, 
+        원래 query 앞에 공백으로 구분하여 추가합니다.
+        """
+        # 의미 있는 품사 태그 목록
+        meaningful_pos_tags = ['NNG', 'NNP', 'VV', 'VA']
+        
+        # 형태소 분석 수행
+        tagged_tokens = self.kkma.pos(query)
+        
+        # 의미 있는 토큰 필터링
+        meaningful_tokens = [token for token, pos in tagged_tokens if pos in meaningful_pos_tags]
+        
+        # 의미 있는 토큰을 공백으로 구분하여 하나의 문자열로 연결
+        filtered_text = ' '.join(meaningful_tokens)
+        
+        # 기존 query에 필터링된 결과를 앞에 추가
+        processed_query = f"{filtered_text} {query}"
+        
+        return processed_query
+    
 
 
 
@@ -72,6 +108,8 @@ class SparseRetrieval:
 
         self.p_embedding = None  # get_sparse_embedding()로 생성합니다
         self.indexer = None  # build_faiss()로 생성합니다.
+
+        self.preprocessor = QueryPreprocessor() # 전처리
 
     def get_sparse_embedding(self) -> NoReturn:
 
@@ -168,8 +206,9 @@ class SparseRetrieval:
         assert self.p_embedding is not None, "get_sparse_embedding() 메소드를 먼저 수행해줘야합니다."
 
         if isinstance(query_or_dataset, str):
-            doc_scores, doc_indices = self.get_relevant_doc(query_or_dataset, k=topk)
-            print("[Search query]\n", query_or_dataset, "\n")
+            processed_query = self.preprocessor.preprocess(query_or_dataset)
+            doc_scores, doc_indices = self.get_relevant_doc(processed_query, k=topk)
+            print("[Search query]\n", processed_query, "\n")
 
             for i in range(topk):
                 print(f"Top-{i+1} passage with score {doc_scores[i]:4f}")
@@ -182,8 +221,9 @@ class SparseRetrieval:
             # Retrieve한 Passage를 pd.DataFrame으로 반환합니다.
             total = []
             with timer("query exhaustive search"):
+                processed_queries = [self.preprocessor.preprocess(q) for q in query_or_dataset["question"]]
                 doc_scores, doc_indices = self.get_relevant_doc_bulk(
-                    query_or_dataset["question"], k=topk
+                    processed_queries, k=topk
                 )
             for idx, example in enumerate(
                 tqdm(query_or_dataset, desc="Sparse retrieval: ")
