@@ -11,7 +11,9 @@
 .git
 .ssh
 code
-data/*
+data/external/*
+data/preprocessed/*
+data/raw/*
 !data/external/.gitkeep
 !data/preprocessed/.gitkeep
 !data/raw/.gitkeep
