@@ -96,7 +96,7 @@ class SparseRetrieval:
             print("Embedding pickle load.")
         else:
             print("Build passage embedding")
-            self.p_embedding = self.tfidfv.fit_transform(self.contexts)
+            self.p_embedding = self.tfidfv.fit_transform(tqdm(self.contexts))
             print(self.p_embedding.shape)
             with open(emd_path, "wb") as file:
                 pickle.dump(self.p_embedding, file)
@@ -110,7 +110,7 @@ class SparseRetrieval:
         Summary:
             속성으로 저장되어 있는 Passage Embedding을
             Faiss indexer에 fitting 시켜놓습니다.
-            이렇게 저장된 indexer는 `get_relevant_doc`에서 유사도를 계산하는데 사용됩니다.
+            이렇게 저장된 indexer는 get_relevant_doc에서 유사도를 계산하는데 사용됩니다.
 
         Note:
             Faiss는 Build하는데 시간이 오래 걸리기 때문에,
@@ -149,9 +149,9 @@ class SparseRetrieval:
         Arguments:
             query_or_dataset (Union[str, Dataset]):
                 str이나 Dataset으로 이루어진 Query를 받습니다.
-                str 형태인 하나의 query만 받으면 `get_relevant_doc`을 통해 유사도를 구합니다.
+                str 형태인 하나의 query만 받으면 get_relevant_doc을 통해 유사도를 구합니다.
                 Dataset 형태는 query를 포함한 HF.Dataset을 받습니다.
-                이 경우 `get_relevant_doc_bulk`를 통해 유사도를 구합니다.
+                이 경우 get_relevant_doc_bulk를 통해 유사도를 구합니다.
             topk (Optional[int], optional): Defaults to 1.
                 상위 몇 개의 passage를 사용할 것인지 지정합니다.
 
@@ -164,6 +164,7 @@ class SparseRetrieval:
                 Ground Truth가 있는 Query (train/valid) -> 기존 Ground Truth Passage를 같이 반환합니다.
                 Ground Truth가 없는 Query (test) -> Retrieval한 Passage만 반환합니다.
         """
+        self.get_sparse_embedding()
 
         assert self.p_embedding is not None, "get_sparse_embedding() 메소드를 먼저 수행해줘야합니다."
 
@@ -185,24 +186,24 @@ class SparseRetrieval:
                 doc_scores, doc_indices = self.get_relevant_doc_bulk(
                     query_or_dataset["question"], k=topk
                 )
-            for idx, example in enumerate(
-                tqdm(query_or_dataset, desc="Sparse retrieval: ")
-            ):
+
+            for idx, example in enumerate(tqdm(query_or_dataset, desc="Sparse retrieval: ")):
                 tmp = {
                     # Query와 해당 id를 반환합니다.
                     "question": example["question"],
                     "id": example["id"],
-                    # Retrieve한 Passage의 id, context를 반환합니다.
-                    "context": " ".join(
-                        [self.contexts[pid] for pid in doc_indices[idx]]
-                    ),
                 }
+                # Ground Truth와 Answer 정보를 포함합니다.
                 if "context" in example.keys() and "answers" in example.keys():
-                    # validation 데이터를 사용하면 ground_truth context와 answer도 반환합니다.
                     tmp["original_context"] = example["context"]
+                    # 각 top1 ~ topk 문서를 개별 컬럼에 저장합니다.
+                    for i in range(topk):
+                        tmp[f"top{i + 1}"] = self.contexts[doc_indices[idx][i]]
                     tmp["answers"] = example["answers"]
+
                 total.append(tmp)
 
+            # DataFrame 생성 및 반환
             cqas = pd.DataFrame(total)
             return cqas
 
@@ -272,9 +273,9 @@ class SparseRetrieval:
         Arguments:
             query_or_dataset (Union[str, Dataset]):
                 str이나 Dataset으로 이루어진 Query를 받습니다.
-                str 형태인 하나의 query만 받으면 `get_relevant_doc`을 통해 유사도를 구합니다.
+                str 형태인 하나의 query만 받으면 get_relevant_doc을 통해 유사도를 구합니다.
                 Dataset 형태는 query를 포함한 HF.Dataset을 받습니다.
-                이 경우 `get_relevant_doc_bulk`를 통해 유사도를 구합니다.
+                이 경우 get_relevant_doc_bulk를 통해 유사도를 구합니다.
             topk (Optional[int], optional): Defaults to 1.
                 상위 몇 개의 passage를 사용할 것인지 지정합니다.
 
@@ -389,24 +390,39 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="")
     parser.add_argument(
-        "--dataset_name", metavar="./data/train_dataset", type=str, help=""
-    )
+        "--dataset_name", metavar="./data/train_dataset/", type=str, help="",
+        default="data/raw/train_dataset"
+        )
     parser.add_argument(
-        "--model_name_or_path",
-        metavar="bert-base-multilingual-cased",
-        type=str,
-        help="",
-    )
-    parser.add_argument("--data_path", metavar="./data", type=str, help="")
+        "--model_name_or_path", metavar="bert-base-multilingual-cased", type=str, help="",
+        default="bert-base-multilingual-cased"
+        )
     parser.add_argument(
-        "--context_path", metavar="wikipedia_documents", type=str, help=""
-    )
-    parser.add_argument("--use_faiss", metavar=False, type=bool, help="")
+        "--data_path", metavar="./data", type=str, help="",
+        default="data/raw"
+        )
+    parser.add_argument(
+        "--context_path", metavar="wikipedia_documents", type=str, help="",
+        default="wikipedia_documents.json"
+        )
+    parser.add_argument(
+        "--use_faiss", metavar=False, type=bool, help="",
+        default=False
+        )
+    parser.add_argument(
+        "--single_query", metavar=True, type=bool, help="", 
+        default=False
+        )
+    parser.add_argument(
+        "--topk", metavar=5, type=int, help="", 
+        default=5
+        )
 
     args = parser.parse_args()
 
     # Test sparse
     org_dataset = load_from_disk(args.dataset_name)
+    
     full_ds = concatenate_datasets(
         [
             org_dataset["train"].flatten_indices(),
@@ -415,6 +431,16 @@ if __name__ == "__main__":
     )  # train dev 를 합친 4192 개 질문에 대해 모두 테스트
     print("*" * 40, "query dataset", "*" * 40)
     print(full_ds)
+    print('\n\n')
+    print("*" * 40, "arguments", "*" * 40)
+    print(f'dataset_name: {args.dataset_name}')
+    print(f'model_name_or_path: {args.model_name_or_path}')
+    print(f'data_path: {args.data_path}')
+    print(f'context_path: {args.context_path}')
+    print(f'use_faiss: {args.use_faiss}')
+    print(f'single_query: {args.single_query}')
+    print(f'topk: {args.topk}')
+    print("*" * 40, "arguments", "*" * 40)
 
     from transformers import AutoTokenizer
 
@@ -427,28 +453,43 @@ if __name__ == "__main__":
     )
 
     query = "대통령을 포함한 미국의 행정부 견제권을 갖는 국가 기관은?"
+    args.use_faiss = False
 
     if args.use_faiss:
+        if args.single_query:
+            # test single query
+            with timer("single query by faiss"):
+                scores, indices = retriever.retrieve_faiss(query)
+        else:
+            # test bulk
+            with timer("bulk query by exhaustive search"):
+                df = retriever.retrieve_faiss(full_ds, topk=args.topk)
+                df["correct"] = df["original_context"] == df["context"]
 
-        # test single query
-        with timer("single query by faiss"):
-            scores, indices = retriever.retrieve_faiss(query)
-
-        # test bulk
-        with timer("bulk query by exhaustive search"):
-            df = retriever.retrieve_faiss(full_ds)
-            df["correct"] = df["original_context"] == df["context"]
-
-            print("correct retrieval result by faiss", df["correct"].sum() / len(df))
+                print("correct retrieval result by faiss", df["correct"].sum() / len(df))
 
     else:
-        with timer("bulk query by exhaustive search"):
-            df = retriever.retrieve(full_ds)
-            df["correct"] = df["original_context"] == df["context"]
-            print(
-                "correct retrieval result by exhaustive search",
-                df["correct"].sum() / len(df),
-            )
+        if args.single_query:
+            with timer("single query by exhaustive search,"):
+                scores, indices = retriever.retrieve(query, topk=args.topk)
+            
+        else:
+            with timer("bulk query by exhaustive search"):
+                df = retriever.retrieve(full_ds, topk=args.topk)
 
-        with timer("single query by exhaustive search"):
-            scores, indices = retriever.retrieve(query)
+                # df["correct"] = df["original_context"] == df["context"]
+                df["correct"] = df.apply(
+                    lambda x: any(x["original_context"] in x[f"top{i + 1}"] for i in range(args.topk)),
+                    axis=1
+                )
+
+                os.makedirs("data/experiments", exist_ok=True)
+                df.to_csv("data/experiments/retrieval_results.csv", index=False, encoding="utf-8-sig")
+                print("DataFrame saved to retrieval_results.csv")
+                print('\n\ncorrect retrieval result by exhaustive search')
+                print(f'SCORE: {df["correct"].sum() / len(df)}')
+                with open("data/experiments/title_text.txt", "a") as f:
+                    f.write(f'Wiki: {args.context_path}\n')
+                    f.write(f'Top k: {args.topk}\n')
+                    f.write(f'SCORE: {df["correct"].sum() / len(df)}\n')
+                    f.write('\n\n')
