@@ -35,3 +35,5 @@ src/__pycache__
 .bash_profile
 
 aistage
+
+__pycache__
