@@ -30,8 +30,8 @@ def embed_long_document(model, document, max_length=512):
         embeddings.append(chunk_embedding)
 
     # 각 청크의 임베딩을 결합
-    # return torch.max(torch.stack(embeddings), dim=0)[0] # max pooling 사용
-    return torch.mean(torch.stack(embeddings), dim=0) # mean pooling 사용
+    return torch.max(torch.stack(embeddings), dim=0)[0] # max pooling 사용
+    # return torch.mean(torch.stack(embeddings), dim=0) # mean pooling 사용
 
 
 random.seed(42)
@@ -46,13 +46,17 @@ mrc = pd.concat([train_df, valid_df])
 
 
 '''inference'''
-model_name = "intfloat/multilingual-e5-large-instruct"
+model_name = "nlpai-lab/KoE5"
 model = SentenceTransformer(model_name)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
+# query_n = 50 # query number
+# wiki_n = 100 # wiki number
+# top_k = 100
 query_n = 50 # query number
 wiki_n = 100 # wiki number
 top_k = 100
+
 
 # 모델 input 최대 길이, 모델 Mem에 따라 조절
 batch_size = 5  # 한번에 처리할 문서 수 설정
@@ -82,9 +86,8 @@ for i in range(len(queries)):
     for start_idx in tqdm(range(0, len(wiki_list), batch_size), desc=f"Processing query {i+1}/{len(queries)}"):
         batch_wiki_list = wiki_list[start_idx:start_idx + batch_size]
         document_embeddings = torch.stack([embed_long_document(model, doc) for doc in batch_wiki_list])
-        scores = (query_embedding @ document_embeddings.T) * 100
-        print(f'scores: {scores}')
-        print(f'scores shape: {scores.shape}')
+        scores = model.similarity(query_embedding, document_embeddings) * 100
+        scores = scores.squeeze(0)
         all_scores.append(scores)
 
     # 점수 결합
@@ -135,4 +138,4 @@ accuracy = correct_count / len(queries)
 print(f"\nAccuracy: {accuracy:.2%} ({correct_count}/{len(queries)})")
 
 # CSV로 저장
-df.to_csv("data/experiments/multilang-e5.csv", index=False)
+df.to_csv("data/experiments/KoE5_max_pooling.csv", index=False)
