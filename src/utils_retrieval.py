@@ -9,77 +9,47 @@ import re
 import torch
 from tqdm import tqdm
 
-def sentence_split(text):
-    # 간단한 문장 단위 분리 함수 (. ! ? 기준으로 문장을 분리)
-    sentences = re.split(r'(?<=[.!?])\s+', text)
-    return sentences
 
+def process_sentences(df, tokenizer, max_seq_length):
+    """
+    DataFrame의 각 row에 있는 문장들을 토큰화하고, 주어진 최대 시퀀스 길이에 맞게 문장을 분할하여 처리하는 함수입니다.
 
-def chunking_with_overlap(sentences, max_length, overlap, include_position=False):
-    chunks = []
-    positions = []  # 순서 정보 저장 리스트
+    각 row에 대해:
+    - 각 문장을 토큰화합니다.
+    - 토큰화된 문장들을 합쳐서 최대 시퀀스 길이를 넘기지 않는 범위에서 처리합니다.
+    - 토큰 길이가 max_seq_length를 넘으면, 새로운 row를 생성하고 합쳐진 문장들을 저장한 후 다시 길이를 초기화합니다.
+    - 모든 문장을 처리할 때까지 반복합니다.
 
-    current_chunk = []
-    total_length = 0
-    start_index = 0
-
-    for i, sentence in enumerate(sentences):
-        sentence_length = len(sentence.split())
-        total_length += sentence_length
-
-        # 현재 문장이 추가되어도 최대 길이를 넘지 않는 경우
-        if total_length <= max_length:
-            current_chunk.append(sentence)
-        else:
-            # chunk 생성 후 초기화
-            chunks.append(" ".join(current_chunk))
-            if include_position:
-                positions.append((start_index, i-1))  # 시작, 끝 문장 인덱스 저장
-            # 다음 chunk 생성 준비 (overlap 문장 포함)
-            current_chunk = sentences[max(0, i-overlap):i]
-            total_length = sum(len(s.split()) for s in current_chunk)
-            start_index = i - overlap
-
-        # 마지막 남은 chunk 처리
-    if current_chunk:
-        chunks.append(" ".join(current_chunk))
-        if include_position:
-            positions.append((start_index, len(sentences)-1))
-
-    return chunks, positions if include_position else chunks
-
-# 적용 함수
-def process_wiki_documents(wiki, max_length, overlap, include_position=False):
-    processed_docs = []
-    doc_positions = []  # 순서 정보를 저장할 리스트
-
-    for doc_id, text in tqdm(enumerate(wiki), total=len(wiki), desc="Processing wiki documents"):
-        sentences = sentence_split(text)  # 문장 단위로 문서 분리
-        if len(text.split()) > max_length:
-            chunks, positions = chunking_with_overlap(sentences, max_length, overlap, include_position)
-            processed_docs.extend(chunks)  # 자른 청크들 추가
-            if include_position:
-                doc_positions.extend(positions)  # 순서 정보 추가
-        else:
-            processed_docs.append(text)  # 길이가 짧으면 그냥 추가
-
-    return (processed_docs, doc_positions) if include_position else processed_docs
-
-# 파라미터 설정
-max_length = 512  # 모델의 최대 입력 길이
-overlap = 2  # 겹치는 문장 수
-include_position = True  # 순서 정보 포함 여부
-
-# 예시 위키 문서 리스트 (30000개를 wiki에 담고 있다고 가정)
-wiki_list = ["This is a long document example. It consists of multiple sentences. Here is another sentence."] * 30000
-
-# 문서 처리
-processed_wiki_docs, doc_positions = process_wiki_documents(wiki_list, max_length, overlap, include_position)
-
-print(f"Processed {len(processed_wiki_docs)} wiki chunks.")
-if include_position:
-    print(f"Document positions: {doc_positions[:5]}")  # 순서 정보 예시 출력
-
+    반환:
+    - 처리된 결과가 담긴 새로운 DataFrame을 반환합니다.
+    """
+    new_rows = []
+    
+    for idx, row in tqdm(df.iterrows(), total=len(df), desc="Chunking wiki documents to fit model input size"):
+        sentences = row['context_sentences']
+        token_length_sum = 0
+        current_text = []
+        
+        for sentence in sentences:
+            token_length = len(tokenizer.tokenize(sentence))
+            
+            if token_length_sum + token_length > max_seq_length:
+                new_row = row.copy()
+                new_row['text_processed'] = " ".join(current_text) # text_processed 대신 text로 나중에 바꾸기
+                new_rows.append(new_row)
+                
+                token_length_sum = 0
+                current_text = []
+            
+            token_length_sum += token_length
+            current_text.append(sentence)
+        
+        if current_text:
+            new_row = row.copy()
+            new_row['text_processed'] = " ".join(current_text)
+            new_rows.append(new_row)
+    
+    return pd.DataFrame(new_rows)
 
 
 

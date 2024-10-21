@@ -1,8 +1,91 @@
 import json
 import pandas as pd
+from tqdm import tqdm
+import re
+from sentence_transformers import SentenceTransformer
 
 
-def wiki_to_title_and_text(path='data/raw/wikipedia_documents.json', return_path='data/preprocessed/wikipedia_documents_no_dup_title_text.json'):
+def split_wiki_for_model(model_name="nlpai-lab/KoE5", path='/data/preprocessed/wikipedia_documents_processed.json', return_path='/data/preprocessed/wikipedia_documents_splitted.json'):
+    def sentence_split(text):
+        # 간단한 문장 단위 분리 함수 (구두점 기준으로 문장을 분리)
+        sentences = re.split(r'(?<=[.!?])\s+|\n+|\\n+|\xa0+|。', text)
+        return sentences
+
+    def process_sentences(df, tokenizer, max_seq_length):
+        print(
+            """
+            *******************************************************************
+            DataFrame의 각 row에 있는 문장들을 토큰화하고, 주어진 최대 시퀀스 길이에 맞게 문장을 분할하여 처리하는 함수입니다.
+
+            각 row에 대해:
+            - 각 문장을 토큰화합니다.
+            - 토큰화된 문장들을 합쳐서 최대 시퀀스 길이를 넘기지 않는 범위에서 처리합니다.
+            - 토큰 길이가 max_seq_length를 넘으면, 새로운 row를 생성하고 합쳐진 문장들을 저장한 후 다시 길이를 초기화합니다.
+            - 모든 문장을 처리할 때까지 반복합니다.
+
+            반환:
+            - 처리된 결과가 담긴 새로운 DataFrame을 반환합니다.
+            *******************************************************************
+        """
+        )
+        new_rows = []
+        
+        for idx, row in tqdm(df.iterrows(), total=len(df), desc="Chunking wiki documents to fit model input size"):
+            sentences = row['context_sentences']
+            token_length_sum = 0
+            current_text = []
+            
+            for sentence in sentences:
+                token_length = len(tokenizer.tokenize(sentence))
+                
+                if token_length_sum + token_length > max_seq_length:
+                    new_row = row.copy()
+                    new_row['text_processed'] = " ".join(current_text) # text_processed 대신 text로 나중에 바꾸기
+                    new_rows.append(new_row)
+                    
+                    token_length_sum = 0
+                    current_text = []
+                
+                token_length_sum += token_length
+                current_text.append(sentence)
+            
+            if current_text:
+                new_row = row.copy()
+                new_row['text_processed'] = " ".join(current_text)
+                new_rows.append(new_row)
+        
+        return pd.DataFrame(new_rows)
+
+    model = SentenceTransformer(
+        model_name_or_path=model_name, 
+        )
+    tokenizer = model.tokenizer
+    max_seq_length = min(model.max_seq_length, model[0].auto_model.config.max_position_embeddings)  # 최대 시퀀스 길이
+
+    data_processed = json.load(open(path))
+    wiki_p = pd.DataFrame(data_processed).T
+    print(wiki_p.shape)
+    wiki_p.head()
+
+    tqdm.pandas()
+
+    wiki_p['context_sentences'] = wiki_p['text'].progress_apply(lambda x: sentence_split(x))
+    wiki_p.head()
+
+    # Process the DataFrame
+    processed_df = process_sentences(df=wiki_p, tokenizer=tokenizer, max_seq_length=max_seq_length)
+    print(processed_df.shape)
+    processed_df['text'] = processed_df['text_processed']
+    processed_df = processed_df.drop(columns=['context_sentences', 'text_processed'])
+    processed_df = processed_df.reset_index(drop=True)
+    data = processed_df.to_dict(orient='index')
+
+    with open(return_path, 'w') as f:
+        json.dump(data, f)
+        
+        
+
+def drop_title_wiki(path='data/raw/wikipedia_documents.json', return_path='data/preprocessed/wikipedia_documents_no_dup_title_text.json'):
 
     with open(path) as f:
         data = json.load(f)
@@ -44,7 +127,7 @@ def wiki_to_title_and_text(path='data/raw/wikipedia_documents.json', return_path
 
 
 
-def process_wiki_text(path='data/preprocessed/wikipedia_documents_no_dup_title_text.json', return_path='data/preprocessed/wikipedia_documents_processed.json'):
+def reduce_wiki_length(path='data/preprocessed/wikipedia_documents_no_dup_title_text.json', return_path='data/preprocessed/wikipedia_documents_processed.json'):
 
     def find_string_in_text(df, search_string):
         return df[df['text'].str.contains(search_string, na=False, regex=False)].index
@@ -55,7 +138,7 @@ def process_wiki_text(path='data/preprocessed/wikipedia_documents_no_dup_title_t
         만든 사람: 희준
         
         기능 요약:
-        문장 단위로 wiki 문서를 나눌 때 '한 문장이 모델 input보다 큰 경우' 예외처리
+        문장 단위로 wiki 문서를 나눌 때 '한 문장의 토큰 길이가 모델 input보다 큰 경우' 예외처리
         
         문서 저장: {return_path}
         *******************************************************************
@@ -103,5 +186,12 @@ def process_wiki_text(path='data/preprocessed/wikipedia_documents_no_dup_title_t
         
 
 if __name__ == '__main__':
-    wiki_to_title_and_text()
-    process_wiki_text()
+    drop_title_wiki(path='data/raw/wikipedia_documents.json',
+                           return_path='data/preprocessed/wikipedia_documents_no_dup_title_text.json'
+                           )
+    reduce_wiki_length(path='data/preprocessed/wikipedia_documents_no_dup_title_text.json', 
+                      return_path='data/preprocessed/wikipedia_documents_processed.json'
+                      )
+    split_wiki_for_model(model_name="nlpai-lab/KoE5", 
+           path='data/preprocessed/wikipedia_documents_processed.json', 
+           return_path='data/preprocessed/wikipedia_documents_splitted_for_retrieval.json')
