@@ -10,6 +10,8 @@ from tqdm import tqdm
 import numpy as np
 import random
 
+import utils_retrieval as utils
+
 
 def sliding_window_tokenize(text, tokenizer, max_length, stride):
     tokens = tokenizer(
@@ -72,7 +74,7 @@ print(f"Top k: {top_k}")
 print()
 
 
-'''Sliding window'''
+# '''Sliding window'''
 max_length = min(model.max_seq_length, model[0].auto_model.config.max_position_embeddings)  # 최대 시퀀스 길이
 stride = int(max_length * 0.5)  # 50% 겹침
 
@@ -113,60 +115,9 @@ with torch.no_grad():
 # retrieved_original_docs = [split_passage_info[i]['original_text'] for i in top_chunk_idx]
 
 
-# 결과 저장
-results = []
-correct_count = 0
 
-for i in range(len(queries)):
-    query_scores = similarities[i]
-
-    # 상위 top_k 문서 찾기 (유사도 내림차순으로 정렬)
-    top_indices = np.argsort(query_scores)[::-1][:top_k]
-
-    # 정답확인
-    correct = False
-    for idx in top_indices:
-        if correct_contexts[i] == split_passage_info[idx]['original_text']:
-            correct = True
-            correct_count += 1
-            break
-
-    # 결과 기록
-    result = {
-        'query': queries[i],
-        'answer_text': correct_contexts[i],
-        'correct': correct
-    }
-
-    print('\n' + '*' * 80)
-    print(f"Query    : {queries[i]}")
-    print(f"Answer   : {correct_contexts[i][:50]}...")
-    print(f"Correct  : {correct}")
-    print()
-
-    # 상위 top_k 문서 및 점수 기록
-    for rank, idx in enumerate(top_indices, 1):
-        original_doc = split_passage_info[idx]['original_text']
-        result[f'top{rank}_text'] = split_passage_info[idx]['original_text']
-        result[f'top{rank}_score'] = query_scores[idx]
-        if rank <= 3:  # 상위 3개의 문서만 출력
-            print(f"Top {rank} (Document {split_passage_info[idx]['doc_id']}), Score: {query_scores[idx]:.2f}")
-            print(f"Document Excerpt: {original_doc[:50]}...")
-            print()
-
-    results.append(result)
-    print('*' * 80 + '\n')
-
-# DataFrame 생성
-df = pd.DataFrame(results)
-
-# 정답률(accuracy) 계산 및 출력
-accuracy = correct_count / len(queries)
-print(f"\nAccuracy: {accuracy:.2%} ({correct_count}/{len(queries)})")
-
-# CSV로 저장
+# 함수 호출
 output_file = "data/experiments/KoE5_sliding_windows_all_queries.csv"
+utils.save_results(results, queries, correct_contexts, similarities, split_passage_info, top_k, correct_count, output_file)
 
-# DataFrame을 CSV 파일로 저장
-df.to_csv(output_file, index=False)
-print(f"Results saved to {output_file}")
+
