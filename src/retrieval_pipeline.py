@@ -31,6 +31,44 @@ def weighted_retrieval_pipeline(query, top_k=5, sparse_weight=0.5, dense_weight=
     return {"id": query["id"], "question": query["question"], "document_ids": ranked_docs}
 
 
+
+##########################################################
+'''
+Test dataset format == Sparse retrieval input format:
+{
+    "id": Value(dtype="string", id=None),
+    "question": Value(dtype="string", id=None),
+}
+'''
+##########################################################
+'''
+Sparse retrieval output format == Dense retrieval input format:
+{
+    "id": Value(dtype="string", id=None),
+    "question": Value(dtype="string", id=None),
+    "document_ids": [document_id, document_id, ...], -> length == top_k
+}
+'''
+##########################################################
+'''
+원래 베이스라인코드:
+Dense retrieval output format == MRC input format:
+{
+    "id": Value(dtype="string", id=None),
+    "question": Value(dtype="string", id=None),
+    "context": Value(dtype="string", id=None),
+}
+
+확장: Reader가 top_k개의 document를 받기
+{
+    "id": Value(dtype="string", id=None),
+    "question": Value(dtype="string", id=None),
+    "document_ids": [document_id, document_id, ...], -> length == top_k
+}
+'''
+##########################################################
+
+
 if __name__ == "__main__":
     # set arg parser
     parser = argparse.ArgumentParser()
