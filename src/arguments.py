@@ -6,10 +6,13 @@ from typing import Optional
 class ModelArguments:
     """
     Arguments pertaining to which model/config/tokenizer we are going to fine-tune from.
+    monologg/koelectra-base-v3-discriminator
+    FacebookAI/xlm-roberta-large
+    klue/bert-base
     """
 
     model_name_or_path: str = field(
-        default="klue/bert-base",
+        default="klue/roberta-base",
         metadata={
             "help": "Path to pretrained model or model identifier from huggingface.co/models"
         },
