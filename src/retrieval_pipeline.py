@@ -46,7 +46,7 @@ Sparse retrieval output format == Dense retrieval input format:
 {
     "id": Value(dtype="string", id=None),
     "question": Value(dtype="string", id=None),
-    "document_ids": [document_id, document_id, ...], -> length == top_k
+    "document_ids": [document_id, document_id, ...], -> max=100
 }
 '''
 ##########################################################
@@ -63,8 +63,9 @@ Dense retrieval output format == MRC input format:
 {
     "id": Value(dtype="string", id=None),
     "question": Value(dtype="string", id=None),
-    "document_ids": [document_id, document_id, ...], -> length == top_k
+    "contexts": [context, context, ...],
 }
+json -> context로 줌ㄴ 
 '''
 ##########################################################
 

@@ -37,7 +37,8 @@ def embed_long_document(model, document, max_length=512):
 random.seed(42)
 
 '''data'''
-data = json.load(open('data/raw/wikipedia_documents.json'))
+# data = json.load(open('data/raw/wikipedia_documents.json'))
+data = json.load(open('data/preprocessed/wikipedia_model.json'))
 wiki = pd.DataFrame(data).T
 dataset = load_from_disk("data/raw/train_dataset/")
 train_df = pd.DataFrame(dataset['train'])
@@ -102,19 +103,19 @@ for i in range(len(queries)):
     }
 
 
-    print('\n' + '*' * 80)
-    print(f"Query    : {queries[i]}")
-    print(f"Answer   : {correct_contexts[i][:50]}...")
-    print(f"Correct  : {correct}")
-    print()
+    # print('\n' + '*' * 80)
+    # print(f"Query    : {queries[i]}")
+    # print(f"Answer   : {correct_contexts[i][:50]}...")
+    # print(f"Correct  : {correct}")
+    # print()
 
     for rank, idx in enumerate(top_indices, 1):
         result[f'top{rank}_text'] = wiki_list[idx]
         result[f'top{rank}_score'] = query_scores[idx]
         if rank <= 5:
-            print(f"Top {rank} (Document {idx}), Score: {query_scores[idx]:.2f}")
-            print(f"Documents: {wiki_list[idx][:50]}...")
-            print()
+            # print(f"Top {rank} (Document {idx}), Score: {query_scores[idx]:.2f}")
+            # print(f"Documents: {wiki_list[idx][:50]}...")
+            # print()
 
     results.append(result)
     print('*' * 80 + '\n')
@@ -124,7 +125,7 @@ df = pd.DataFrame(results)
 
 # 정답률(accuracy) 계산 및 출력
 accuracy = correct_count / len(queries)
-print(f"\nAccuracy: {accuracy:.2%} ({correct_count}/{len(queries)})")
+# print(f"\nAccuracy: {accuracy:.2%} ({correct_count}/{len(queries)})")
 
 # CSV로 저장
 if mode == 'mean':

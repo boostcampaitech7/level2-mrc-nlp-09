@@ -10,7 +10,7 @@ import random
 random.seed(42)
 
 '''data'''
-data = json.load(open('data/raw/wikipedia_documents.json'))
+data = json.load(open('data/preprocessed/wikipedia_model.json'))
 wiki = pd.DataFrame(data).T
 dataset = load_from_disk("data/raw/train_dataset/")
 train_df = pd.DataFrame(dataset['train'])

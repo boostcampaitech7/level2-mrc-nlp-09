@@ -85,7 +85,7 @@ def split_wiki_for_model(model_name="nlpai-lab/KoE5", path='/data/preprocessed/w
         
         
 
-def drop_title_wiki(path='data/raw/wikipedia_documents.json', return_path='data/preprocessed/wikipedia_documents_no_dup_title_text.json'):
+def add_title(path='data/raw/wikipedia_documents.json', return_path='data/preprocessed/wikipedia_documents_no_dup_title_text.json'):
 
     with open(path) as f:
         data = json.load(f)
@@ -119,7 +119,6 @@ def drop_title_wiki(path='data/raw/wikipedia_documents.json', return_path='data/
         *******************************************************************
         '''
     )
-    df = df.drop_duplicates(subset='text')
     data = df.to_dict(orient='index')
     
     with open(return_path, 'w') as f:
@@ -127,7 +126,7 @@ def drop_title_wiki(path='data/raw/wikipedia_documents.json', return_path='data/
 
 
 
-def reduce_wiki_length(path='data/preprocessed/wikipedia_documents_no_dup_title_text.json', return_path='data/preprocessed/wikipedia_documents_processed.json'):
+def cut_sentence_length(path='data/preprocessed/wikipedia_documents_no_dup_title_text.json', return_path='data/preprocessed/wikipedia_documents_processed.json'):
 
     def find_string_in_text(df, search_string):
         return df[df['text'].str.contains(search_string, na=False, regex=False)].index
@@ -186,12 +185,13 @@ def reduce_wiki_length(path='data/preprocessed/wikipedia_documents_no_dup_title_
         
 
 if __name__ == '__main__':
-    drop_title_wiki(path='data/raw/wikipedia_documents.json',
-                           return_path='data/preprocessed/wikipedia_documents_no_dup_title_text.json'
+    add_title(path='data/raw/wikipedia_documents.json',
+                           return_path='data/preprocessed/wikipedia_title.json'
                            )
-    reduce_wiki_length(path='data/preprocessed/wikipedia_documents_no_dup_title_text.json', 
-                      return_path='data/preprocessed/wikipedia_documents_processed.json'
+    cut_sentence_length(path='data/preprocessed/wikipedia_title.json', 
+                      return_path='data/preprocessed/wikipedia_sentence_cut.json'
                       )
     split_wiki_for_model(model_name="nlpai-lab/KoE5", 
-           path='data/preprocessed/wikipedia_documents_processed.json', 
-           return_path='data/preprocessed/wikipedia_documents_splitted_for_retrieval.json')
+           path='data/preprocessed/wikipedia_sentence_cut.json', 
+           return_path='data/preprocessed/wikipedia_model.json'
+           )
