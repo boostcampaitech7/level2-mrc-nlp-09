@@ -22,7 +22,7 @@ from transformers import (
 from utils_qa import check_no_error, postprocess_qa_predictions
 import wandb
 
-wandb.login(key='21fba073e77744b98fe5e4e69d99cc28e71f8bd1') # wandb 개인키
+wandb.login(key='your_key') # wandb 개인키
 seed = 2024
 deterministic = False
 
@@ -49,8 +49,8 @@ def main():
 
 
     wandb.init(
-        project="level2MRC", # 프로젝트 이름
-        entity="stelli", # 본인 팀 이름
+        project="your_project", # 프로젝트 이름
+        entity="your_team", # 본인 팀 이름
         config={
             "seed": training_args.seed,
             "learning_rate": training_args.learning_rate,
