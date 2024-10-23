@@ -88,9 +88,7 @@ def calculate_and_save_similarities(sparse_retrieval_results, model, topn=100, p
         context_embeddings = safe_encode(model, context_chunked, batch_size=32)
 
         # print(f"Context embeddings shape: {context_embeddings.shape}")
-        print(query_embedding.shape)
-        print(context_embeddings.shape)
-        similarity_scores = (query_embedding @ context_embeddings).squeeze().tolist()
+        similarity_scores = (query_embedding @ context_embeddings.T).squeeze().tolist()
 
         # print(f"Calculated similarity scores for {len(similarity_scores)} chunks.")
 
@@ -163,12 +161,14 @@ print(f'Max sequence length: {max_length}')
 input_file = "BM25Ensemble_top100_original.csv"
 output_file = "BM25Ensemble_top100_Qwen.csv"
 sparse_retrieval_results = pd.read_csv(f'data/pipeline/{input_file}')
+sparse_retrieval_results = sparse_retrieval_results[:10]
+print(f"Input Shape: {sparse_retrieval_results.shape}")
 
 sorted_df = calculate_and_save_similarities(
     sparse_retrieval_results=sparse_retrieval_results, 
     model=model, 
     topn=sum(1 for col in sparse_retrieval_results.columns if 'context' in col),
-    pooling='mean',
+    pooling='max',
     analysis=False,
     file_name=f"{output_file}"
 )

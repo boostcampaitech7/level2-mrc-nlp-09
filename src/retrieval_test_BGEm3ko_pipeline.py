@@ -25,7 +25,8 @@ def calculate_and_save_similarities(sparse_retrieval_results, model, topn=100, p
         # print(f"\nProcessing row {idx+1}/{len(sparse_retrieval_results)}: {row['id']}")
         
         # 쿼리 임베딩 생성
-        query_embedding = model.encode(row['question'], prompt_name="query")
+        # query_embedding = model.encode(row['question'], prompt_name="query")
+        query_embedding = model.encode(row['question'])
         # print(f"Query embedding created for question: {row['question']}")
 
         # 각 쿼리별로 top1_context부터 topn_context까지 모두 가져와서 유사도 계산
@@ -63,7 +64,8 @@ def calculate_and_save_similarities(sparse_retrieval_results, model, topn=100, p
         # print(f"Total number of chunks to be encoded: {len(context_chunked)}")
 
         # 모든 chunk에 대해 유사도를 한꺼번에 계산
-        context_embeddings = model.encode(context_chunked, prompt_name="passage")
+        # context_embeddings = model.encode(context_chunked, prompt_name="passage")
+        context_embeddings = model.encode(context_chunked)
 
         print(query_embedding.shape)
         print(context_embeddings.shape)
@@ -121,28 +123,28 @@ prompts = {
     "passage": "passage: "     # 문서 패시지 프롬프트
 }
 
-model_name = "nlpai-lab/KoE5"
+model_name = "dragonkue/BGE-m3-ko"
 model = SentenceTransformer(
     model_name_or_path=model_name, 
-    device='cuda', 
-    similarity_fn_name='dot',
+    # device='cuda', 
+    # similarity_fn_name='dot',
     # truncate_dim=512,
     # model_kwargs={"torch_dtype": torch.bfloat16},
-    prompts=prompts,
+    # prompts=prompts,
     )
 
 
 # 데이터
 '''Sparse retrieval로 받아온 set으로 테스트'''
 input_file = "BM25Ensemble_top100_original"
-output_file = "BM25Ensemble_topk_100_modelname"
+output_file = "BM25Ensemble_top100_modelname"
 sparse_retrieval_results = pd.read_csv(f'data/pipeline/{input_file}.csv')
 
 sorted_df = calculate_and_save_similarities(
     sparse_retrieval_results=sparse_retrieval_results, 
     model=model, 
     topn=sum(1 for col in sparse_retrieval_results.columns if 'context' in col),
-    pooling='mean',
+    pooling='max',
     analysis=False,
     file_name=f"{output_file}"
 )
