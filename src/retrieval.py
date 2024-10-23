@@ -15,14 +15,12 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from tqdm.auto import tqdm
 from konlpy.tag import Kkma
 
-# from ..scripts.QueryPreprocessor import QueryPreprocessor
 # 현재 파일의 절대 경로를 기준으로 'scripts' 폴더의 상대 경로 추가
 current_dir = os.path.dirname(os.path.abspath(__file__))
 scripts_dir = os.path.join(current_dir, '../scripts')
 
 sys.path.append(scripts_dir)
 
-# 이제 QueryPreprocessor 모듈 import
 from QueryPreprocessor import QueryPreprocessor
 
 seed = 2024
