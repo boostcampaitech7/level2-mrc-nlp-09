@@ -17,12 +17,13 @@ from transformers import (
     EvalPrediction,
     HfArgumentParser,
     TrainingArguments,
+    EarlyStoppingCallback,
     set_seed,
 )
 from utils_qa import check_no_error, postprocess_qa_predictions
 import wandb
 
-wandb.login(key='your_key') # wandb 개인키
+wandb.login(key='21fba073e77744b98fe5e4e69d99cc28e71f8bd1') # wandb 개인키
 seed = 2024
 deterministic = False
 
@@ -37,6 +38,10 @@ if deterministic: # cudnn random seed 고정 - 고정 시 학습 속도가 느�
 
 logger = logging.getLogger(__name__)
 
+early_stopping = EarlyStoppingCallback(
+     early_stopping_patience=3,
+)
+
 def main():
     # 가능한 arguments 들은 ./arguments.py 나 transformer package 안의 src/transformers/training_args.py 에서 확인 가능합니다.
     # --help flag 를 실행시켜서 확인할 수 도 있습니다.
@@ -49,8 +54,8 @@ def main():
 
 
     wandb.init(
-        project="your_project", # 프로젝트 이름
-        entity="your_team", # 본인 팀 이름
+        project="level2MRC", # 프로젝트 이름
+        entity="stelli", # 본인 팀 이름
         config={
             "seed": training_args.seed,
             "learning_rate": training_args.learning_rate,

@@ -1,4 +1,4 @@
-python ./src/train.py \
+python ./src/train_csv.py \
  --do_eval \
  --per_device_eval_batch_size 16 \
  --seed 2024 \

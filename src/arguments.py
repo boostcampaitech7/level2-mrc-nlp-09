@@ -6,9 +6,11 @@ from typing import Optional
 class ModelArguments:
     """
     Arguments pertaining to which model/config/tokenizer we are going to fine-tune from.
-    monologg/koelectra-base-v3-discriminator
+    monologg/koelectra-base-v3-finetuned-korquad
     FacebookAI/xlm-roberta-large
     klue/bert-base
+    HANTAEK/klue-roberta-large-korquad-v1-qa-finetuned
+    klue/roberta-base
     """
 
     model_name_or_path: str = field(

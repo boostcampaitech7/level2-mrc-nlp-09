@@ -111,22 +111,25 @@ def main():
         })
     })
     '''
-    csv_file = "../data/preprocessed/test.csv" # csv경로 수정 필요
+    csv_file = "./data/preprocessed/BM25Ensemble_topk_10.csv" # csv경로 수정 필요
     
     if os.path.exists(csv_file): # reranking한 json이 따로 있는 경우
+        dataset = load_from_disk("./data/raw/train_dataset/") 
+        validation_df = pd.DataFrame(dataset['validation'])
         df = pd.read_csv(csv_file)
         
-        # context1, context2 ... 
-        context_columns = [col for col in df.columns if col.startswith('context')]  # Identify all context columns
-        df['context'] = df[context_columns].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
         
-        df['answers'] = df.apply(lambda row: {"text": [row['answer']], "answer_start": [0]}, axis=1)  # Adjust 'answer_start' as needed
+        df_merged = pd.merge(df, validation_df[['id', 'answers']], on='id', how='left')
+        
+        # context1, context2 ... 
+        context_columns = [col for col in df_merged.columns if col.startswith('top')][:35]  # Identify all context columns [:n]으로 상위 n까지만 획득 가능
+        df_merged['context'] = df_merged[context_columns].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
 
         # 이름 변경이 필요한 경우 context, quesion, id, answers
-        # df.rename(columns={'id': 'question_id', 'question': 'question'}, inplace=True)
-        # df = df[['context', 'question', 'id', 'answers']]
+        # df_merged.rename(columns={'id': 'question_id', 'question': 'question'}, inplace=True)
+        # df_merged = df_merged[['context', 'question', 'id', 'answers']]
         
-        dataset = Dataset.from_pandas(df)
+        dataset = Dataset.from_pandas(df_merged)
         
         datasets = DatasetDict({
             "validation": dataset
