@@ -2,6 +2,7 @@ import pandas as pd
 import torch
 from tqdm import tqdm
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
+import numpy as np
 
 def exp_normalize(x):
     b = x.max()

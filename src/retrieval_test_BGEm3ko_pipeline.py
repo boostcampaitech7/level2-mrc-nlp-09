@@ -14,6 +14,17 @@ random.seed(42)
 tqdm.pandas()
 
 
+def safe_encode(model, texts, batch_size=32):
+    while batch_size > 1:
+        try:
+            return model.encode(texts, batch_size=batch_size)
+        except torch.cuda.OutOfMemoryError:
+            batch_size = batch_size // 2
+            print(f"Out of memory, reducing batch size to {batch_size}")
+    raise RuntimeError("Batch size too small, still out of memory.")
+
+
+
 def calculate_and_save_similarities(sparse_retrieval_results, model, topn=100, pooling='max', analysis=False, file_name="output.csv"):
     similarities = []
     reordered_data = []
@@ -25,8 +36,8 @@ def calculate_and_save_similarities(sparse_retrieval_results, model, topn=100, p
         # print(f"\nProcessing row {idx+1}/{len(sparse_retrieval_results)}: {row['id']}")
         
         # 쿼리 임베딩 생성
-        # query_embedding = model.encode(row['question'], prompt_name="query")
-        query_embedding = model.encode(row['question'])
+        query_embedding = safe_encode(model, row['question'], batch_size=32)
+
         # print(f"Query embedding created for question: {row['question']}")
 
         # 각 쿼리별로 top1_context부터 topn_context까지 모두 가져와서 유사도 계산
@@ -64,8 +75,7 @@ def calculate_and_save_similarities(sparse_retrieval_results, model, topn=100, p
         # print(f"Total number of chunks to be encoded: {len(context_chunked)}")
 
         # 모든 chunk에 대해 유사도를 한꺼번에 계산
-        # context_embeddings = model.encode(context_chunked, prompt_name="passage")
-        context_embeddings = model.encode(context_chunked)
+        context_embeddings = safe_encode(model, context_chunked, batch_size=32)
 
         print(query_embedding.shape)
         print(context_embeddings.shape)
@@ -136,8 +146,8 @@ model = SentenceTransformer(
 
 # 데이터
 '''Sparse retrieval로 받아온 set으로 테스트'''
-input_file = "BM25Ensemble_top100_original"
-output_file = "BM25Ensemble_top100_modelname"
+input_file = "BM25Ensemble_top100_test"
+output_file = "BM25Ensemble_top100_BGEm3ko_test"
 sparse_retrieval_results = pd.read_csv(f'data/pipeline/{input_file}.csv')
 
 sorted_df = calculate_and_save_similarities(
