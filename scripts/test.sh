@@ -2,8 +2,18 @@
 
 set +e
 
-python src/retrieval_test_ko-reranker_pipeline.py || true
+# python src/retrieval_test_bge-reranker_pipeline.py --input_file test_BM25Ensemble_top45_original_1.csv --output_file test_BM25Ensemble_top45_bge_reranker_1.csv
 
-python src/retrieval_test_bge-reranker_pipeline.py || true
+# python src/retrieval_test_bge-reranker_pipeline.py --input_file test_BM25Ensemble_top45_original_2.csv --output_file test_BM25Ensemble_top45_bge_reranker_2.csv
 
-# not running yet
+python src/retrieval_test_bge-reranker_pipeline.py --input_file test_BM25Ensemble_top45_original_200_250.csv --output_file test_BM25Ensemble_top45_bge_reranker_200_250.csv
+python src/retrieval_test_bge-reranker_pipeline.py --input_file test_BM25Ensemble_top45_original_250_300.csv --output_file test_BM25Ensemble_top45_bge_reranker_250_300.csv
+
+python src/retrieval_test_bge-reranker_pipeline.py --input_file test_BM25Ensemble_top45_original_300_350.csv --output_file test_BM25Ensemble_top45_bge_reranker_300_350.csv
+python src/retrieval_test_bge-reranker_pipeline.py --input_file test_BM25Ensemble_top45_original_350_400.csv --output_file test_BM25Ensemble_top45_bge_reranker_350_400.csv
+
+python src/retrieval_test_bge-reranker_pipeline.py --input_file test_BM25Ensemble_top45_original_400_450.csv --output_file test_BM25Ensemble_top45_bge_reranker_400_450.csv
+python src/retrieval_test_bge-reranker_pipeline.py --input_file test_BM25Ensemble_top45_original_450_500.csv --output_file test_BM25Ensemble_top45_bge_reranker_450_500.csv
+
+python src/retrieval_test_bge-reranker_pipeline.py --input_file test_BM25Ensemble_top45_original_500_550.csv --output_file test_BM25Ensemble_top45_bge_reranker_500_550.csv
+python src/retrieval_test_bge-reranker_pipeline.py --input_file test_BM25Ensemble_top45_original_550_600.csv --output_file test_BM25Ensemble_top45_bge_reranker_550_600.csv
