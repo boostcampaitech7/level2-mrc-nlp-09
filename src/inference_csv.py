@@ -87,23 +87,23 @@ def main():
         config=config,
     )
 
-    # True일 경우 : run passage retrieval
-    if data_args.eval_retrieval:
-        datasets = run_sparse_retrieval(
-            tokenizer.tokenize, datasets, training_args, data_args,
-        )
+    # # True일 경우 : run passage retrieval
+    # if data_args.eval_retrieval:
+    #     datasets = run_sparse_retrieval(
+    #         tokenizer.tokenize, datasets, training_args, data_args,
+    #     )
     
-    csv_file = "../data/preprocessed/test.csv" # csv경로 수정 필요
+    csv_file = "./data/heejun/reranker_final.csv" # csv경로 수정 필요
     
     if os.path.exists(csv_file): # reranking한 json이 따로 있는 경우
 
         df = pd.read_csv(csv_file)
         
         # context1, context2 ... 
-        context_columns = [col for col in df.columns if col.startswith('context')]  # Identify all context columns
+        context_columns = [col for col in df.columns if col.startswith('top')][:1]  # Identify all context columns
         df['context'] = df[context_columns].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
         
-        df['answers'] = df.apply(lambda row: {"text": [row['answer']], "answer_start": [0]}, axis=1)  # Adjust 'answer_start' as needed
+        # df['answers'] = df.apply(lambda row: {"text": [row['answer']], "answer_start": [0]}, axis=1)  # Adjust 'answer_start' as needed
 
         # 이름 변경이 필요한 경우 context, quesion, id, answers
         # df.rename(columns={'id': 'question_id', 'question': 'question'}, inplace=True)

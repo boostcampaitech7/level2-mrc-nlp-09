@@ -14,6 +14,8 @@ data/raw/*
 data/preprocessed/*
 data/external/*
 data/processed
+data/data2
+data/heejun
 data/raw copy
 !data/raw/.gitkeep
 !data/preprocessed/.gitkeep
@@ -39,3 +41,5 @@ aistage
 __pycache__
 
 wandb
+
+src/nbest_files

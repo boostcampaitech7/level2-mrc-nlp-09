@@ -1,4 +1,4 @@
-python ./src/train_wandb.py \
+python ./src/train.py \
  --do_train \
  --per_device_train_batch_size 16 \
  --per_device_eval_batch_size 16 \

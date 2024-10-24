@@ -112,7 +112,7 @@ def main():
     })
     '''
     if training_args.do_eval:
-        csv_file = "./data/preprocessed/BM25Ensemble_topk_10.csv" # csv경로 수정 필요
+        csv_file = "./data/heejun/BM25Ensemble_top100_bge-reranker.csv" # csv경로 수정 필요
         
         if os.path.exists(csv_file): # reranking한 json이 따로 있는 경우
             dataset = load_from_disk("./data/raw/train_dataset/") 
@@ -123,7 +123,7 @@ def main():
             df_merged = pd.merge(df, validation_df[['id', 'answers']], on='id', how='left')
             
             # context1, context2 ... 
-            context_columns = [col for col in df_merged.columns if col.startswith('top')][:35]  # Identify all context columns [:n]으로 상위 n까지만 획득 가능
+            context_columns = [col for col in df_merged.columns if col.startswith('top')][:1]  # Identify all context columns [:n]으로 상위 n까지만 획득 가능
             df_merged['context'] = df_merged[context_columns].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
 
             # 이름 변경이 필요한 경우 context, quesion, id, answers
