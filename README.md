@@ -60,14 +60,25 @@ torch=2.4.1+cu121
 
 ### Directory Structure
 ./  
+├── code/  
 ├── data/  
+│   ├── experiments/  
+│   │   ├── (experiments data)  
 │   ├── pipeline/  
-│   │   ├── BM25Ensemble_top100_original.csv        # input file  
-│   │   └── reranker_final.csv                      # output file  
+│   │   ├── (experiments data)  
+│   ├── preprocessed/  
+│   │   ├── (preprocessed data)  
+│   ├── raw/  
+│   │   ├── (raw data)  
 │   ├── notebooks/  
-│   │   ├── dense_pipeline_result.ipynb             # result analysis  
+│   │   ├── (experiments codes)  
+│   ├── scripts/  
+│   │   ├── test.sh  
 │   ├── src/  
-│   │   ├── retrieval_test_bge-reranker_pipeline.py # code  
+│   │   ├── data_processing/  
+│   │   │   ├── preprocess.py  
+│   │   ├── (experiments codes)  
+├── .gitignore  
 ├── environment.yml  
 └── README.md  
 
