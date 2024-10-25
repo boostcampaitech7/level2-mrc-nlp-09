@@ -1,0 +1,1 @@
+python src/run.py --strategies ST_01 --debug false --report false --run_cnt 1

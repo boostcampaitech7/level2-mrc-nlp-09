@@ -1,0 +1,1 @@
+python src/run_retrieval.py --strategies ST_01 --debug False --report False --run_cnt 1

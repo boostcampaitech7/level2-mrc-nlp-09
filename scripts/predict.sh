@@ -1,0 +1,1 @@
+python src/predict.py --strategies ST_01 --debug False --report False

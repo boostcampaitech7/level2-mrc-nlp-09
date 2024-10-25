@@ -1,32 +1,22 @@
 # 사용자 홈 디렉토리 관련 파일 제외
 .cache/
+.git/
 .nv/
 .ssh/
-.bash_history
-.bashrc
 
-# 가상환경 폴더 제외
-.conda/
-miniconda3/
+# input 파일 제외
+input/data/*
+input/embed/*
+input/checkpoint/*
+input/info/*
 
-# 데이터 파일 제외
-data/raw/*
-data/preprocessed/*
-data/external/*
-!data/raw/.gitkeep
-!data/preprocessed/.gitkeep
-!data/external/.gitkeep
-
-# 개인 데이터 파일
-data/raw_1/*
-
-# 모델 파일 제외
-models/*
-!models/.gitkeep
-
-# 결과 파일 제외
+# output 파일 제외
 outputs/*
-!outputs/.gitkeep
 
-# 소스코드 캐시 파일 제외
-src/__pycache__
+# 캐시 파일 제외
+src/arguments/ __pycache__
+src/reader/ __pycache__
+src/retriever/ __pycache__
+src/retriever/dense/ __pycache__
+src/retriever/hybrid/ __pycache__
+src/retriever/sparse/ __pycache__

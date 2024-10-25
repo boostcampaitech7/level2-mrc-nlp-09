@@ -65,7 +65,7 @@ def find_similar_documents(questions, wikipedia_data):
     return best_matches
 
 # 5. 증강된 데이터셋 생성
-batch_size = 8
+batch_size = 256
 augmented_data = []
 
 for idx in tqdm(range(0, train_data.shape[0], batch_size), desc="Augmenting Data"):
@@ -80,7 +80,7 @@ for idx in tqdm(range(0, train_data.shape[0], batch_size), desc="Augmenting Data
     for i in range(len(batch)):
         new_doc_id, similar_doc = best_matches[i]
         current_doc_id = current_doc_ids[i]
-        answer = batch.iloc[i]['answer']
+        answer = batch.iloc[i]['answers']['text']
         
         # 만약 다른 문서라면 해당 문서 전체를 context로 사용
         if new_doc_id != current_doc_id:
