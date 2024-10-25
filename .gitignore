@@ -2,34 +2,26 @@
 .ssh
 
 code/*
+!code/.gitkeep
 config/*
 
 data/experiments/*
-data/external/*
+!data/experiments/.gitkeep
+
 data/pipeline/*
+!data/pipeline/.gitkeep
+
 data/preprocessed/*
+!data/preprocessed/.gitkeep
+
 data/raw/*
-
-logs/*
-models/*
-
-notebooks/*
-!notebooks/dense_pipeline_result.ipynb
-
-outputs/*
+!data/raw/.gitkeep
 
 scripts/*
 !scripts/test.sh
 
-src/*
-!src/data_processing
-!src/retrieval_test_bge-reranker_pipeline.py
-
-utils/*
-environment.yaml
-requirements.txt
-
 src/__pycache__
+
 *.json
 *.arrow
 *.txt
