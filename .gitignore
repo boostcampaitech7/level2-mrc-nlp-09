@@ -1,35 +1,35 @@
-# 사용자 홈 디렉토리 관련 파일 제외
-.cache/
-.nv/
-.ssh/
-.bash_history
-.bashrc
-
-
-
-
 .git
 .ssh
 
-code
+code/*
+config/*
 
+data/experiments/*
 data/external/*
+data/pipeline/*
 data/preprocessed/*
 data/raw/*
-!data/external/.gitkeep
-!data/preprocessed/.gitkeep
-!data/raw/.gitkeep
 
+logs/*
 models/*
-!models/.gitkeep
+
+notebooks/*
+!notebooks/dense_pipeline_result.ipynb
 
 outputs/*
-!outputs/.gitkeep
+
+scripts/*
+!scripts/test.sh
+
+src/*
+!src/data_processing
+!src/retrieval_test_bge-reranker_pipeline.py
+
+utils/*
+environment.yaml
+requirements.txt
 
 src/__pycache__
-
-tests/*
-
 *.json
 *.arrow
 *.txt
