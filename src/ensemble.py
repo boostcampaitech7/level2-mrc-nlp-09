@@ -1,7 +1,36 @@
 import os
 import json
 
-if __name__ == '__main__':
+"""
+This script performs soft voting on multiple nbest prediction files generated from 
+a question-answering model. It aggregates the predictions, calculates the mean 
+probability for each answer candidate, and selects the answer with the highest 
+mean probability using a soft voting strategy.
+
+Process:
+1. Reads multiple JSON files from a given folder, each containing nbest predictions.
+2. Concatenates the answer candidates from all the files for each question ID.
+3. Counts the probability for each unique answer candidate from the combined files.
+4. For each question, selects the answer candidate with the highest average probability 
+    as the final prediction.
+5. Writes the final predictions into a JSON file.
+
+The final output will be a JSON file (`soft_voting_predictions.json`) containing the 
+selected answers for each question.
+
+Variables:
+    folder_path (str): The path to the folder containing nbest prediction JSON files.
+    nbest_files_concat_list (list): A list of concatenated nbest files data.
+    answer_candidates_dict (dict): Dictionary to store unique answer candidates 
+                                    and their associated probabilities for each question.
+    final_ans_dict (dict): Dictionary that holds the final selected answer 
+                            for each question after soft voting.
+
+Returns:
+    A JSON file `soft_voting_predictions.json` with the final answers.
+"""
+
+def main():
     folder_path = "/data/ephemeral/home/donghun/src/nbest_files"
     nbest_files = os.listdir(folder_path)
     nbest_files_concat_list = []
@@ -49,3 +78,6 @@ if __name__ == '__main__':
         final_ans_dict[i] = text_list[max_value_index]
     with open('soft_voting_predictions.json', 'w') as f:
         json.dump(final_ans_dict, f, ensure_ascii=False, indent=4)
+
+if __name__ == '__main__':
+    main()

@@ -93,7 +93,35 @@ def main():
     #         tokenizer.tokenize, datasets, training_args, data_args,
     #     )
     
-    csv_file = "./data/heejun/reranker_final.csv" # csv경로 수정 필요
+
+    """
+    This function checks if the retrieval step has already produced a CSV file containing the dataset. 
+    If the CSV file exists, it loads this dataset and uses it for further evaluation or prediction. 
+    If the CSV file does not exist, the function uses the baseline dataset provided.
+
+    Process:
+    1. It checks for the existence of the retrieval CSV file (`reranker_final.csv`).
+    2. If the CSV file is found:
+    - It reads the CSV file, concatenates the 'top' context columns, and forms a 'context' column.
+    - It converts the DataFrame into a Dataset object.
+    - The dataset is then updated to include this newly processed dataset for evaluation or prediction.
+    3. If the CSV file is not found, the baseline dataset (loaded earlier) is used.
+
+    Variables:
+        - csv_file (str): The path to the CSV file produced by the retrieval process.
+        - datasets (DatasetDict): The dataset dictionary used for evaluation or prediction. 
+                                It will be updated with the retrieval dataset if available.
+
+    Output:
+        - The datasets variable will either contain the retrieval-extracted dataset (if CSV exists) 
+        or the original baseline dataset.
+
+    Notes:
+        - Ensure the CSV file path (`csv_file`) is correctly specified and accessible.
+        - The baseline dataset is used as a fallback when the CSV file is not found.
+    """
+
+    csv_file = "./data/preprocessed/reranker_final.csv" # csv경로 수정 필요
     
     if os.path.exists(csv_file): # reranking한 json이 따로 있는 경우
 
