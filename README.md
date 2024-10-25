@@ -21,8 +21,11 @@ torch=2.4.1+cu121
 │   │   └── reranker_final.csv                      # output file  
 │   ├── notebooks/  
 │   │   ├── dense_pipeline_result.ipynb             # result analysis  
+│   ├── scripts/  
+│   │   ├── test.sh  
 │   ├── src/  
 │   │   ├── retrieval_test_bge-reranker_pipeline.py # code  
+├── .gitignore  
 ├── environment.yml  
 └── README.md  
 
