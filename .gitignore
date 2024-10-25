@@ -9,9 +9,14 @@ input/data/*
 input/embed/*
 input/checkpoint/*
 input/info/*
+!input/data/.gitkeep
+!input/embed/.gitkeep
+!input/checkpoint/.gitkeep
+!input/info/.gitkeep
 
 # output 파일 제외
 outputs/*
+!outputs/.gitkeep
 
 # 캐시 파일 제외
 src/arguments/ __pycache__
