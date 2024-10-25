@@ -19,9 +19,9 @@ outputs/*
 !outputs/.gitkeep
 
 # 캐시 파일 제외
-src/arguments/ __pycache__
-src/reader/ __pycache__
-src/retriever/ __pycache__
-src/retriever/dense/ __pycache__
-src/retriever/hybrid/ __pycache__
-src/retriever/sparse/ __pycache__
+src/arguments/__pycache__
+src/reader/__pycache__
+src/retriever/__pycache__
+src/retriever/dense/__pycache__
+src/retriever/hybrid/__pycache__
+src/retriever/sparse/__pycache__
