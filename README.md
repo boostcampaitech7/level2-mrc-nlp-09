@@ -1,4 +1,4 @@
-## Rerank top-k documents from Sparse Retriever
+## Reranker Experiments
 
 ### Setup Environment
 For our experiments we have added environment.yaml for creating the same environment that we have used. For setup of enviorment please run the following command:
