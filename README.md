@@ -1,25 +1,26 @@
 ## Rerank top-k documents from Sparse Retriever
 
 ### Setup Environment
-For our experiments we have added environment.yaml for creating the same environment that we have used. For setup of enviorment please run the following command:
-
+To ensure consistency, we've provided `environment.yml` to create the same environment we used in our experiments. Set up the environment by running:
 ```console
 $ conda env create -f environment.yml
 ```
 
-Please refer to these environments:
-Ubuntu-20.04.6 LTS
-python=3.11.10
-torch=2.4.1+cu121
+**Environment Requirements:**    
+- Ubuntu-20.04.6 LTS    
+- python=3.11.10    
+- torch=2.4.1+cu121    
+
+<br>
 
 ### Directory Structure
 ./  
 ├── data/  
 │   ├── pipeline/  
-│   │   ├── BM25Ensemble_top100_original.csv        # input file  
-│   │   └── reranker_final.csv                      # output file  
+│   │   ├── BM25Ensemble_top100_original.csv
+│   │   └── reranker_final.csv
 │   ├── notebooks/  
-│   │   ├── dense_pipeline_result.ipynb             # result analysis  
+│   │   ├── dense_pipeline_result.ipynb
 │   ├── scripts/  
 │   │   ├── test.sh  
 │   ├── src/  
@@ -28,25 +29,26 @@ torch=2.4.1+cu121
 ├── environment.yml  
 └── README.md  
 
+<br>
+
 ### Data
-We have processed the data on BM25Ensemble_top100_original.csv. This file is output of Sparse Retrieval, which filters 100 wikipedia documents from 60613 wikipedia documents based on queries.
+The `BM25Ensemble_top100_original.csv` file contains data processed by Sparse Retrieval, which filters 100 Wikipedia documents from a set of 60,613 based on queries.  
 
-Data Format: .csv
-    Rows: Queries
-    Cols: ['id', 'question', 'top1_context', 'top2_context', ..., 'top100_context']
+- Format: .csv
+- Rows: Queries
+- Columns: ['id', 'question', 'top1_context', 'top2_context', ..., 'top100_context']
+- Shape: (600, 102)  
+- Data Path: `data/pipeline/`
 
-Data Shape: (600, 102)
+<br>
 
-The path to the Data are:
-"data/pipeline"
-
+## Steps
 
 ### 0. Settings
-Before start, Make sure setting conda environment and check if data from Sparse Retrieval are in "data/pipeline".
-
+Before starting, ensure the Conda environment is set up and that Sparse Retrieval data is available in `data/pipeline`.
 
 ### 1. Rerank
-To start running Reranker model, please run the command below:
+Run the following command to start the Reranker model:
 
 ```console
 $ bash src/test.sh
@@ -54,23 +56,22 @@ $ bash src/test.sh
 
 
 ### 2. Reranker Process
-After running process, Output file "reranker_final.csv" will be created. This file is output of Reranking, which cuts wikipedia documents from Sparse Retrieval from 100 to 45(Recall Accuracy: 97.5%) and rerank the order of 45 documents based on similarities.
+Once the process completes, the output file reranker_final.csv will be created. This file contains the top 45 reranked Wikipedia documents (out of the original 100), reordered based on similarity (Recall Accuracy: 97.5%).
 
-Data Format: .csv
-    Rows: Queries
-    Cols: ['id', 'question', 'top1_context', 'top2_context', ..., 'top45_context']
-
-Data Shape: (600, 47)
-
-The path to the Data are:
-"data/pipeline"
+- Format: .csv
+- Rows: Queries
+- Columns: ['id', 'question', 'top1_context', 'top2_context', ..., 'top45_context']
+- Shape: (600, 47)
+- Data Path: `data/pipeline`
 
 
 ### 3. Result Analysis
-With "reranker_final.csv", you can analyze it by Recall Score.
+You can analyze `reranker_final.csv` by calculating the Recall Score.
+
 
 
 ### 4. Output to MRC
-You should give output file to MRC model to process MRC task.
+Pass the output file to the MRC model for further processing.
+
 
 
