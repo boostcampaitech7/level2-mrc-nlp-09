@@ -1,77 +1,93 @@
-## Rerank top-k documents from Sparse Retriever
+## A reader that trains on the training dataset and performs evaluation and inference based on a CSV file of retrieval results
 
 ### Setup Environment
 
-For our experiments we have added environment.yaml for creating the same environment that we have used. For setup of enviorment please run the following command:
+For our experiments we have added conda-requirements.txt for creating the same environment that we have used. For setup of enviorment please run the following command:
 
 ```console
-$ conda env create -f environment.yml
+$ while read requirement; do conda install --yes $requirement || pip install $requirement; done < conda-requirements.txt
 ```
 
 Please refer to these environments:
-NVIDIA-SMI 535.161.08
 Ubuntu-20.04.6 LTS
-python=3.11.10
-torch=2.4.1+cu121
+python=3.9.20
 
 ### Directory Structure
 
 ./  
-├── data/  
-│ ├── pipeline/  
-│ │ ├── BM25Ensemble_top100_original.csv # input file  
-│ │ └── reranker_final.csv # output file  
-│ ├── notebooks/  
-│ │ ├── dense_pipeline_result.ipynb # result analysis  
-│ ├── src/  
-│ │ ├── retrieval_test_bge-reranker_pipeline.py # code  
-├── environment.yml  
-└── README.md
+|-- data/
+| |-- raw/
+| | |-- wikipedia.json
+| | |-- train_dataset
+| | | |-- train
+| | | |-- validation
+| |-- external/
+| |-- preprocessed/
+| | |-- retrievalResults.csv
+|-- models/
+|-- notebooks/
+| |-- EDA.ipynb
+|-- outputs/
+|-- src/
+| |-- nbest_files/
+| | |-- nbest_prediction1.json
+| |-- arguments.py
+| |-- ensemble.py
+| |-- inference_csv.py
+| |-- train_csv.py
+| |-- train_wandb.py
+| |-- trainer_qa.py
+| |-- utils_qa.py
+|-- eval.sh
+|-- inference.sh
+|-- train.sh
+|-- .gitignore
+|-- README.md
+|-- conda-requirements.txt
 
 ### Data
 
-We have processed the data on BM25Ensemble_top100_original.csv. This file is output of Sparse Retrieval, which filters 100 wikipedia documents from 60613 wikipedia documents based on queries.
-
-Data Format: .csv
-Rows: Queries
-Cols: ['id', 'question', 'top1_context', 'top2_context', ..., 'top100_context']
-
-Data Shape: (600, 102)
-
-The path to the Data are:
-"data/pipeline"
+The structure of the CSV file consists of id, question, top1_context, top2_context, and so on. The answer is retrieved from the training or validation dataset using the id value.
+The id matches those in the provided validation and training datasets.
 
 ###### START
 
 ### 0. Settings
 
-Before start, Make sure setting conda environment and check if data from Sparse Retrieval are in "data/pipeline".
+Before start, Make sure setting conda environment and check if the CSV file with retrieval results is in the "data/preprocessed" directory.
 
-### 1. Rerank
+### 1. Train
 
-To start running Reranker model, please run the command below:
+Refer to arguments.py and execute the following code:
 
 ```console
-$ bash src/test.sh
+$ source train.sh
 ```
 
-### 2. Reranker Process
+### 2. Evaluate
 
-After running process, Output file "reranker_final.csv" will be created. This file is output of Reranking, which cuts wikipedia documents from Sparse Retrieval from 100 to 45(Recall Accuracy: 97.5%) and rerank the order of 45 documents based on similarities.
+Modify the paths in the main function of train_csv.py to match your environment, and then execute the following code:
 
-Data Format: .csv
-Rows: Queries
-Cols: ['id', 'question', 'top1_context', 'top2_context', ..., 'top45_context']
+```console
+$ source eval.sh
+```
 
-Data Shape: (600, 47)
+The output is located in output/train_dataset/validation.
 
-The path to the Data are:
-"data/pipeline"
+### 3. Inference
 
-### 3. Result Analysis
+Modify the paths in the main function of train_csv.py to match your environment, and then execute the following code:
 
-With "reranker_final.csv", you can analyze it by Recall Score.
+```console
+$ source eval.sh
+```
 
-### 4. Output to MRC
+The output is located in output/test_dataset/validation.
 
-You should give output file to MRC model to process MRC task.
+### 4. Ensemble
+
+To prepare for ensembling, place the output result file nbest_prediction.json in the src/nbest_files directory, and then enter the following code:
+
+```console
+$ python src/ensemble.py
+```
