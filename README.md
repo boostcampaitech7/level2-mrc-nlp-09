@@ -8,10 +8,14 @@ $ conda env create -f environment.yml
 ```
 
 Please refer to these environments:
-NVIDIA-SMI 535.161.08
-Ubuntu-20.04.6 LTS
-python=3.11.10
-torch=2.4.1+cu121
+- torch==1.13
+- datasets==2.15.0
+- transformers==4.25.1
+- tqdm
+- pandas
+- scikit-learn
+- fuzzywuzzy>=0.7.0,<=0.18.0
+- numpy<2.0
 
 
 ### Model Candidate Selection
@@ -59,31 +63,67 @@ torch=2.4.1+cu121
 
 
 ### Directory Structure
-./  
-├── code/  
-├── data/  
-│   ├── experiments/  
-│   │   ├── (experiments data)  
-│   ├── pipeline/  
-│   │   ├── (experiments data)  
-│   ├── preprocessed/  
-│   │   ├── (preprocessed data)  
-│   ├── raw/  
-│   │   ├── (raw data)  
-│   ├── notebooks/  
-│   │   ├── (experiments codes)  
-│   ├── scripts/  
-│   │   ├── test.sh  
-│   ├── src/  
-│   │   ├── data_processing/  
-│   │   │   ├── preprocess.py  
-│   │   ├── (experiments codes)  
-├── .gitignore  
-├── environment.yml  
-└── README.md  
+
+```
+exp-Retrieval/
+│
+├── config/ - strategy files
+│   ├── ST01.json
+│   └── ...
+│
+├── reader/ - reader 
+│   ├── base_reader.py
+│   ├── custom_head.py
+│   └── custom_reader.py
+│
+├── retrieval/ - retriever
+│   ├── base_retrieval.py
+│   ├── dense
+│   │   ├── dense_base.py
+│   │   ├── dpr.py
+│   │   └── dpr_base.py
+│   ├── hybrid
+│   │   ├── hybrid_base.py
+│   │   └── hybrid.py
+│   └── sparse
+│       ├── sparse_base.py
+│       ├── tfidf.py
+│       ├── bm25_base.py
+│       ├── bm25l.py
+│       ├── bm25plus.py
+│       ├── atire_bm25.py
+│       └── bm25ensemble.py
+│ 
+├── utils/ - utils
+│   ├── evaluation.py - for evaluation normalize
+│   ├── prepare.py - get datasets/retriever/reader
+│   ├── slack_api.py - for slack api loading, report to slack channel
+│   ├── tokenization_kobert.py - for kobert tokenizer
+│   ├── tools.py - update arguments, tester excuter
+│   ├── tester.py - debugging, testing
+│   ├── trainer_qa.py - trainer(custom evaluate, predict)
+│   └── utils_qa.py - post processing function
+│
+├── arguments/ - arguments file
+│   ├── model_args.py
+│   ├── data_args.py
+│   ├── retriever_args.py
+│   └── train_args.py
+├── scripts/ - executable script files
+│   ├── run_mrc.sh - execute run_mrc module
+│   ├── run_retrieval.sh - execute run_retrieval module
+│   ├── run.sh - execute run module
+│   └── predict.sh - execute predict module
+│
+├── ensemble.py - do ensemble
+├── run_mrc.py - train/evaluate MRC model
+├── run_retrieval_csv.py - the retriever model output to a CSV file
+├── run_retrieval.py - train/evaluate retriever model
+├── run.py - evaluate both models
+└── predict.py - inference
+```
 
 ### Data
-
 
 ```
 input/
@@ -110,8 +150,6 @@ input/
     │       └── state.json
     └── wikipedia_documents.json
 ```
-
-
 
  ###### START ######
 
