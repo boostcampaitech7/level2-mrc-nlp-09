@@ -41,9 +41,6 @@ The path to the Data are:
 "data/pipeline"
 
 
-
- ###### START ######
-
 ### 0. Settings
 Before start, Make sure setting conda environment and check if data from Sparse Retrieval are in "data/pipeline".
 
