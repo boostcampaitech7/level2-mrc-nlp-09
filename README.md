@@ -56,6 +56,8 @@ F1 Score: Unlike EM, F1 Score gives partial score. For instance, if the correct 
 
 ### 5. Results
 
+![image](https://github.com/user-attachments/assets/3235d172-82cc-4938-b1d0-1c996c09a4bb)
+
 EM: 62.92%
 F1 Score: 73.46%
 
