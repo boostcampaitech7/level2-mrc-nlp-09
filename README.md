@@ -1,4 +1,4 @@
-## Reranker Experiments
+## Retrieval Experiments
 
 ### Setup Environment
 For our experiments we have added environment.yaml for creating the same environment that we have used. For setup of enviorment please run the following command:
@@ -16,27 +16,6 @@ Please refer to these environments:
 - scikit-learn
 - fuzzywuzzy>=0.7.0,<=0.18.0
 - numpy<2.0
-
-
-### Model Candidate Selection
-
-1. github → MTEB Korean Leaderboard
-    
-    https://github.com/su-park/mteb_ko_leaderboard?tab=readme-ov-file
-    
-2. Multilingual E5 Finetune (2024.10.15)
-    
-    https://yjoonjang.medium.com/koe5-최초의-한국어-임베딩-모델-multilingual-e5-finetune-22fa7e56d220
-    
-3. Autorag → Leaderboard
-    
-    https://velog.io/@autorag/어떤-한국어-임베딩-모델-성능이-가장-좋을까-직접-벤치마크-해보자
-    
-    https://github.com/Marker-Inc-Korea/AutoRAG-example-korean-embedding-benchmark
-
-4. (Reference) SentenceTransformers Documents
-
-   https://sbert.net/docs/package_reference/sentence_transformer/SentenceTransformer.html
 
 
 ### Rerank Experiment
@@ -71,49 +50,66 @@ exp-Retrieval/
 │   ├── ST01.json
 │   └── ...
 │
-├── reader/ - reader 
-│   ├── base_reader.py
-│   ├── custom_head.py
-│   └── custom_reader.py
+├── data/ - output data
+│   └── pipeline/
 │
-├── retrieval/ - retriever
-│   ├── base_retrieval.py
-│   ├── dense
-│   │   ├── dense_base.py
-│   │   ├── dpr.py
-│   │   └── dpr_base.py
-│   ├── hybrid
-│   │   ├── hybrid_base.py
-│   │   └── hybrid.py
-│   └── sparse
-│       ├── sparse_base.py
-│       ├── tfidf.py
-│       ├── bm25_base.py
-│       ├── bm25l.py
-│       ├── bm25plus.py
-│       ├── atire_bm25.py
-│       └── bm25ensemble.py
-│ 
-├── utils/ - utils
-│   ├── evaluation.py - for evaluation normalize
-│   ├── prepare.py - get datasets/retriever/reader
-│   ├── slack_api.py - for slack api loading, report to slack channel
-│   ├── tokenization_kobert.py - for kobert tokenizer
-│   ├── tools.py - update arguments, tester excuter
-│   ├── tester.py - debugging, testing
-│   ├── trainer_qa.py - trainer(custom evaluate, predict)
-│   └── utils_qa.py - post processing function
+├── input/
+│   ├── data/
+│   ├── embed/
+│   ├── checkpoint/
+│   └── info/
 │
-├── arguments/ - arguments file
-│   ├── model_args.py
-│   ├── data_args.py
-│   ├── retriever_args.py
-│   └── train_args.py
+├── notebooks/
+│   ├── data/
+│   ├── embed/
+│   ├── checkpoint/
+│   └── info/
+│
 ├── scripts/ - executable script files
 │   ├── run_mrc.sh - execute run_mrc module
 │   ├── run_retrieval.sh - execute run_retrieval module
 │   ├── run.sh - execute run module
 │   └── predict.sh - execute predict module
+│
+├── src/
+│   ├── reader/ - reader 
+│   │   ├── base_reader.py
+│   │   ├── custom_head.py
+│   │   └── custom_reader.py
+│   │
+│   ├── retrieval/ - retriever
+│   │   ├── base_retrieval.py
+│   │   ├── dense
+│   │   │   ├── dense_base.py
+│   │   │   ├── dpr.py
+│   │   │   └── dpr_base.py
+│   │   ├── hybrid
+│   │   │   ├── hybrid_base.py
+│   │   │   └── hybrid.py
+│   │   └── sparse
+│   │       ├── sparse_base.py
+│   │       ├── tfidf.py
+│   │       ├── bm25_base.py
+│   │       ├── bm25l.py
+│   │       ├── bm25plus.py
+│   │       ├── atire_bm25.py
+│   │       └── bm25ensemble.py
+│   │
+│   ├── utils/ - utils
+│   │   ├── evaluation.py - for evaluation normalize
+│   │   ├── prepare.py - get datasets/retriever/reader
+│   │   ├── slack_api.py - for slack api loading, report to slack channel
+│   │   ├── tokenization_kobert.py - for kobert tokenizer
+│   │   ├── tools.py - update arguments, tester excuter
+│   │   ├── tester.py - debugging, testing
+│   │   ├── trainer_qa.py - trainer(custom evaluate, predict)
+│   │   └── utils_qa.py - post processing function
+│   │
+│   └── arguments/ - arguments file
+│       ├── model_args.py
+│       ├── data_args.py
+│       ├── retriever_args.py
+│       └── train_args.py
 │
 ├── ensemble.py - do ensemble
 ├── run_mrc.py - train/evaluate MRC model
