@@ -15,34 +15,34 @@ python=3.9.20
 ### Directory Structure
 
 ./  
-|-- data/
-| |-- raw/
-| | |-- wikipedia.json
-| | |-- train_dataset
-| | | |-- train
-| | | |-- validation
-| |-- external/
-| |-- preprocessed/
-| | |-- retrievalResults.csv
-|-- models/
-|-- notebooks/
-| |-- EDA.ipynb
-|-- outputs/
-|-- src/
-| |-- nbest_files/
-| | |-- nbest_prediction1.json
-| |-- arguments.py
-| |-- ensemble.py
-| |-- inference_csv.py
-| |-- train_csv.py
-| |-- train_wandb.py
-| |-- trainer_qa.py
-| |-- utils_qa.py
-|-- eval.sh
-|-- inference.sh
-|-- train.sh
-|-- .gitignore
-|-- README.md
+|-- data/  
+| |-- raw/  
+| | |-- wikipedia.json  
+| | |-- train_dataset  
+| | | |-- train  
+| | | |-- validation  
+| |-- external/  
+| |-- preprocessed/  
+| | |-- retrievalResults.csv  
+|-- models/  
+|-- notebooks/  
+| |-- EDA.ipynb  
+|-- outputs/  
+|-- src/  
+| |-- nbest_files/  
+| | |-- nbest_prediction1.json  
+| |-- arguments.py  
+| |-- ensemble.py  
+| |-- inference_csv.py  
+| |-- train_csv.py  
+| |-- train_wandb.py  
+| |-- trainer_qa.py  
+| |-- utils_qa.py  
+|-- eval.sh  
+|-- inference.sh  
+|-- train.sh  
+|-- .gitignore  
+|-- README.md  
 |-- conda-requirements.txt
 
 ### Data
