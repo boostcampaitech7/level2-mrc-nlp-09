@@ -17,7 +17,15 @@ Each branch (main-Retrieval, main-Reranker, main-MRC) details the specific Pytho
 
 
 ### 2. Data
-에베베
+**The Wikipedia document corpus** used in the Retrieval stage is stored at ./data/raw/wikipedia_documents.json, comprising approximately 57,000 unique documents.
+
+**The MRC dataset** used in the MRC stage is stored at ./data/raw/train_dataset and ./data/raw/test_dataset.  
+
+Sample Data Structure Overview:  
+![8acf9df5-ea23-4ad2-a24c-c9a847d24e59](https://github.com/user-attachments/assets/c3a69377-34e7-49d7-828c-a93977baa42d)
+
+Sample Document Format:  
+![00129d26-34fd-4313-9579-e088665239bf](https://github.com/user-attachments/assets/a812e35d-93e6-42c8-808f-37d683337e73)
 
 
 ### 3. Pipeline Stages
