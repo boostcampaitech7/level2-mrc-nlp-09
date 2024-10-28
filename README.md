@@ -1,6 +1,6 @@
 ## Rerank top-k documents from Sparse Retriever
 
-### Setup Environment
+### 1. Setup Environment
 To ensure consistency, we've provided `environment.yml` to create the same environment we used in our experiments. Set up the environment by running:
 ```console
 $ conda env create -f environment.yml
@@ -13,7 +13,7 @@ $ conda env create -f environment.yml
 
 <br>
 
-### Directory Structure
+### 2. Directory Structure
 ./  
 ├── data/  
 │   ├── pipeline/  
@@ -31,7 +31,7 @@ $ conda env create -f environment.yml
 
 <br>
 
-### Data
+### 3. Data
 The `BM25Ensemble_top100_original.csv` file contains data processed by Sparse Retrieval, which filters 100 Wikipedia documents from a set of 60,613 based on queries.  
 
 - Format: .csv
