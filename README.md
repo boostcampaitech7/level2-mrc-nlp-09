@@ -83,35 +83,52 @@ torch=2.4.1+cu121
 └── README.md  
 
 ### Data
-We have processed the data on BM25Ensemble_top100_original.csv. This file is output of Sparse Retrieval, which filters 100 wikipedia documents from 60613 wikipedia documents based on queries.
 
-Data Format: .csv
-    Rows: Queries
-    Cols: ['id', 'question', 'top1_context', 'top2_context', ..., 'top100_context']
 
-Data Shape: (600, 102)
-
-The path to the Data are:
-"data/pipeline"
+```
+input/
+│
+└── data
+    ├── train_dataset
+    │   ├── dataset_dict.json
+    │   ├── train
+    │   │   ├── dataset.arrow
+    │   │   ├── dataset_info.json
+    │   │   ├── indices.arrow
+    │   │   └── state.json
+    │   └── validation
+    │       ├── dataset.arrow
+    │       ├── dataset_info.json
+    │       ├── indices.arrow
+    │       └── state.json
+    ├── test_dataset
+    │   ├── dataset_dict.json
+    │   └── validation
+    │       ├── dataset.arrow
+    │       ├── dataset_info.json
+    │       ├── indices.arrow
+    │       └── state.json
+    └── wikipedia_documents.json
+```
 
 
 
  ###### START ######
 
 ### 0. Settings
-Before start, Make sure setting conda environment and check if data from Sparse Retrieval are in "data/pipeline".
+Before start, Make sure setting conda environment and check if data from external data are in "data/pipeline".
 
 
-### 1. Rerank
-To start running Reranker model, please run the command below:
+### 1. Retrieval
+To start running Retrieval model, please run the command below:
 
 ```console
-$ bash src/test.sh
+$ bash scripts/run_retrieval.sh
 ```
 
 
-### 2. Reranker Process
-After running process, Output file "reranker_final.csv" will be created. This file is output of Reranking, which cuts wikipedia documents from Sparse Retrieval from 100 to 45(Recall Accuracy: 97.5%) and rerank the order of 45 documents based on similarities.
+### 2. Retrieval Process
+After running process, Output file "BM25Ensemble_topk_100_original.csv" will be created. This file is output of Retrieval, which cuts wikipedia documents from 60,613 to 100(Recall Accuracy: 97.92%).
 
 Data Format: .csv
     Rows: Queries
@@ -124,9 +141,9 @@ The path to the Data are:
 
 
 ### 3. Result Analysis
-With "reranker_final.csv", you can analyze it by Recall Score.
+With "BM25Ensemble_topk_100_original.csv", you can analyze it by Recall Score.
 
 
-### 4. Output to MRC
-You should give output file to MRC model to process MRC task.
+### 4. Output to Rerank
+You should give output file to Rerank model to process Rerank task.
 
