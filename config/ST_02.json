@@ -32,7 +32,7 @@
         "k1": 0.1,
         "topk": 10,
         "alpha": 0.1,
-        "retrain": false,
+        "retrain": true,
         "weight_decay": 0.01,
         "learning_rate": 3e-5,
         "num_train_epochs": 15,
