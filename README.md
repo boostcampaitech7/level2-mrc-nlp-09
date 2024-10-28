@@ -7,7 +7,7 @@ $ conda env create -f environment.yml
 ```
 
 **Environment Requirements:**    
-- Ubuntu-20.04.6 LTS    
+- Ubuntu 20.04.6 LTS    
 - python=3.11.10    
 - torch=2.4.1+cu121    
 
@@ -34,7 +34,7 @@ The `BM25Ensemble_top100_original.csv` file contains data processed by Sparse Re
 
 - Format: .csv
 - Rows: Queries
-- Columns: ['id', 'question', 'top1_context', 'top2_context', ..., 'top100_context']
+- Columns: `['id', 'question', 'top1_context', 'top2_context', ..., 'top100_context']`
 - Shape: (600, 102)  
 - Data Path: `data/pipeline/`
 
@@ -54,11 +54,11 @@ $ bash src/test.sh
 
 
 ### 2. Reranker Process
-Once the process completes, the output file reranker_final.csv will be created. This file contains the top 45 reranked Wikipedia documents (out of the original 100), reordered based on similarity (Recall Accuracy: 97.5%).
+Once the process completes, the output file `reranker_final.csv` will be created. This file contains the top 45 reranked Wikipedia documents (out of the original 100), reordered based on similarity (Recall Accuracy: 97.5%).
 
 - Format: .csv
 - Rows: Queries
-- Columns: ['id', 'question', 'top1_context', 'top2_context', ..., 'top45_context']
+- Columns: `['id', 'question', 'top1_context', 'top2_context', ..., 'top45_context']`
 - Shape: (600, 47)
 - Data Path: `data/pipeline`
 
