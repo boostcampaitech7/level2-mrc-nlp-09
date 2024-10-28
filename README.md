@@ -23,7 +23,7 @@ $ conda env create -f environment.yml
 │   ├── scripts/  
 │   │   ├── test.sh  
 │   ├── src/  
-│   │   ├── retrieval_test_bge-reranker_pipeline.py
+│   │   ├── retrieval_test_bge-reranker_pipeline.py  
 ├── .gitignore  
 ├── environment.yml  
 └── README.md  
