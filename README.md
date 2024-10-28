@@ -47,3 +47,16 @@ Processes the final top-k reranked documents per query, extracting exact answers
 
 For additional information, refer to each branch’s README detailing installation, environment specifics, and model usage instructions.
 
+### 4. Evaluation Metrics
+On the Leader Board, EM would be the main metric for the task.
+
+Exact Match (EM): A score is awarded only when the model's prediction exactly matches the true answer.(Each question is therefore scored as either 0 or 1)
+
+F1 Score: Unlike EM, F1 Score gives partial score. For instance, if the correct answer is "Barack Obama" but the prediction is "Obama," the EM score would be 0, while the F1 Score considers overlapping words and would provide partial score.
+
+### 5. Results
+
+EM: 62.92%
+F1 Score: 73.46%
+
+*These metrics provide insight into both the accuracy and partial correctness of the model’s predictions across all stages of the pipeline.
