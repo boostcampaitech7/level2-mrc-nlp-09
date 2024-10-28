@@ -19,11 +19,11 @@ $ conda env create -f environment.yml
 │   │   ├── BM25Ensemble_top100_original.csv  
 │   │   └── reranker_final.csv  
 │   ├── notebooks/  
-│   │   ├── dense_pipeline_result.ipynb  
+│   │   └── dense_pipeline_result.ipynb  
 │   ├── scripts/  
-│   │   ├── test.sh  
+│   │   └── test.sh  
 │   ├── src/  
-│   │   ├── retrieval_test_bge-reranker_pipeline.py  
+│   │   └── retrieval_test_bge-reranker_pipeline.py  
 ├── .gitignore  
 ├── environment.yml  
 └── README.md  
