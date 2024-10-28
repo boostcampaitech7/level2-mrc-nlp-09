@@ -1,7 +1,7 @@
 # RAG based Open-Domain Question Answering (ODQA with RAG)
 This project utilizes a three-stage Retrieval-Augmented Generation (RAG) pipeline to extract answers from large document collections effectively. The system combines Sparse and Dense Retrieval, Reranking, and Machine Reading Comprehension (MRC) to provide accurate answers from Wikipedia. Each stage is managed in a separate branch, with this README giving an overview and directing to each branch for in-depth setup and usage.
 
-MORE : https://github.com/boostcampaitech7/level2-mrc-nlp-09/blob/main/RAG%20based%20Open-Domain%20Question%20Answering.pdf
+MORE : ![ODQA with RAG](https://github.com/boostcampaitech7/level2-mrc-nlp-09/blob/main/RAG%20based%20Open-Domain%20Question%20Answering.pdf)
 
 ## Overview
 ### 1. Environment Setup
