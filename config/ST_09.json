@@ -30,7 +30,7 @@
     "retriever": {
         "b": 0.01,
         "k1": 0.1,
-        "topk": 10,
+        "topk": 100,
         "alpha": 0.1,
         "retrain": false,
         "weight_decay": 0.01,
