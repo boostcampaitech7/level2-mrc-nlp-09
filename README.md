@@ -51,8 +51,11 @@ For additional information, refer to each branch’s README detailing installati
 On the Leader Board, EM would be the main metric for the task.
 
 Exact Match (EM): A score is awarded only when the model's prediction exactly matches the true answer.(Each question is therefore scored as either 0 or 1)
+![image](https://github.com/user-attachments/assets/c89a6126-eaf3-41d7-91c0-0fda02db6adc)
 
 F1 Score: Unlike EM, F1 Score gives partial score. For instance, if the correct answer is "Barack Obama" but the prediction is "Obama," the EM score would be 0, while the F1 Score considers overlapping words and would provide partial score.
+![image](https://github.com/user-attachments/assets/e5560d00-0ab7-41e4-a9ca-dc5cd3284285)
+
 
 ### 5. Results
 
