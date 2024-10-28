@@ -8,7 +8,6 @@ $ conda env create -f environment.yml
 ```
 
 Please refer to these environments:
-NVIDIA-SMI 535.161.08
 Ubuntu-20.04.6 LTS
 python=3.11.10
 torch=2.4.1+cu121
