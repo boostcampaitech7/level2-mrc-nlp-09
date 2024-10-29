@@ -2,7 +2,7 @@
 
 
 ### Setup Environment
-For our experiments we have added environment.yaml for creating the same environment that we have used. For setup of enviorment please run the following command:
+For our experiments we have added `environment.yaml` for creating the same environment that we have used. For setup of enviorment please run the following command:
 
 ```console
 $ conda env create -f environment.yml
@@ -21,7 +21,7 @@ Please refer to these environments:
 
 ### Data setting
 
-Please place the dataset provided by the competition in the input/data directory:
+Please place the dataset provided by the competition in the `input/data` directory:
 
 ```
 input/
@@ -94,7 +94,7 @@ exp-Retrieval/
 ###### START ######
 
 ### 0. Settings
-Before start, Make sure setting conda environment and check the dataset are in "input/data".
+Before start, Make sure setting conda environment and check the dataset are in `input/data`.
 
 
 ### 1. Retrieval
@@ -106,19 +106,19 @@ $ bash scripts/run_retrieval.sh
 
 
 ### 2. Retrieval Process
-After running process, Output file "BM25Ensemble_topk_100_original.csv" will be created. This file is output of Retrieval, which cuts wikipedia documents from 60,613 to 100(Recall Accuracy: 97.92%) and ranks these 100 documents based on similarities.
+After running process, Output file `BM25Ensemble_topk_100_original.csv` will be created. This file is output of Retrieval, which cuts wikipedia documents from 60,613 to 100(Recall Accuracy: 97.92%) and ranks these 100 documents based on similarities.
 
 Data Format: .csv
     Rows: Queries
-    Cols: ['id', 'question', 'top1_context', 'top2_context', ..., 'top100_context']
+    Cols: `['id', 'question', 'top1_context', 'top2_context', ..., 'top100_context']`
 
 Data Shape: (600, 102)
 
-The path to the Data are: "data/pipeline"
+The path to the Data are: `data/pipeline`
 
 
 ### 3. Result Analysis
-With "BM25Ensemble_topk_100_original.csv," you can analyze it by Recall Score.
+With `BM25Ensemble_topk_100_original.csv`, you can analyze it by Recall Score.
 
 
 ### 4. Output to Rerank
