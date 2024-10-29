@@ -83,7 +83,7 @@ exp-Retrieval/
 |   ├── run_reader.py
 |   ├── run.py
 |   ├── predict.py
-|   ├── postprocessing.pypostprocessing.py
+|   ├── postprocessing.py
 |   └── ensemble.py
 ├── .gitignore
 ├── README.md
