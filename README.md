@@ -54,38 +54,39 @@ input/
 
 ```
 exp-Retrieval/
-|-- config/
-|  |-- ST01.json
-|-- input/
-|  |-- data/
-|  |-- embed/
-|  |-- checkpoint/
-|-- notebooks/
-|  |-- EDA.ipynb
-|-- scripts/
-|  |-- run_retrieval.sh
-|  |-- run_reader.sh
-|  |-- run.sh
-|  |-- predict.sh
-|-- src/
-|  |-- data_processing/
-|  |-- arguments/
-|  |-- retriever/
-|  |  |-- sparse/
-|  |  |-- dense/
-|  |  |-- hybrid/
-|  |-- reader/
-|  |-- utils/
-|  |-- run_retriever.py
-|  |-- run_reader.py
-|  |-- run.py
-|  |-- predict.py
-|  |-- postprocessing.py
-|  |-- ensemble.py
-|-- .gitignore
-|-- README.md
-|-- requirements.txt
-|-- environment.yml
+│
+├── config/
+│   └── ST01.json
+├── input/
+│   ├── data/
+│   ├── embed/
+│   └── heckpoint/
+├── notebooks/
+|   └── EDA.ipynb
+├── scripts/
+|   ├── run_retrieval.sh
+|   ├── run_reader.sh
+|   ├── run.sh
+|   └── predict.sh
+├── src/
+|   ├── data_processing/
+|   ├── arguments/
+|   ├── retriever/
+|   |   ├── sparse/
+|   |   ├── dense/
+|   |   └── hybrid/
+|   ├── reader/
+|   ├── utils/
+|   ├── run_retriever.py
+|   ├── run_reader.py
+|   ├── run.py
+|   ├── predict.py
+|   ├── postprocessing.pypostprocessing.py
+|   └── ensemble.py
+├── .gitignore
+├── README.md
+├── requirements.txt
+└── environment.yml
 ```
 
 
