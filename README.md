@@ -57,10 +57,12 @@ exp-Retrieval/
 │
 ├── config/
 │   └── ST01.json
+├── data/
+│   └── pipeline/
 ├── input/
 │   ├── data/
 │   ├── embed/
-│   └── heckpoint/
+│   └── checkpoint/
 ├── notebooks/
 |   └── EDA.ipynb
 ├── scripts/
