@@ -50,7 +50,7 @@ input/
 ### Directory Structure
 
 ```
-exp-Retrieval/
+mian-Retrieval/
 │
 ├── config/
 │   └── ST01.json
