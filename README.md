@@ -61,17 +61,10 @@ exp-Retrieval/
 │   └── pipeline/
 ├── input/
 │   ├── data/
-│   ├── embed/
-│   └── checkpoint/
-├── notebooks/
-|   └── EDA.ipynb
+│   └── embed/
 ├── scripts/
-|   ├── run_retrieval.sh
-|   ├── run_reader.sh
-|   ├── run.sh
-|   └── predict.sh
+|   └── run_retrieval.sh
 ├── src/
-|   ├── data_processing/
 |   ├── arguments/
 |   ├── retriever/
 |   |   ├── sparse/
@@ -79,12 +72,7 @@ exp-Retrieval/
 |   |   └── hybrid/
 |   ├── reader/
 |   ├── utils/
-|   ├── run_retriever.py
-|   ├── run_reader.py
-|   ├── run.py
-|   ├── predict.py
-|   ├── postprocessing.pypostprocessing.py
-|   └── ensemble.py
+|   └── run_retriever.py
 ├── .gitignore
 ├── README.md
 ├── requirements.txt
