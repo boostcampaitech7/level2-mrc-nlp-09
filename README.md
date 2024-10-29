@@ -57,10 +57,12 @@ exp-Retrieval/
 │
 ├── config/
 │   └── ST01.json
+├── data/
+│   └── pipeline/
 ├── input/
 │   ├── data/
 │   ├── embed/
-│   └── heckpoint/
+│   └── checkpoint/
 ├── notebooks/
 |   └── EDA.ipynb
 ├── scripts/
@@ -123,5 +125,4 @@ With `BM25Ensemble_topk_100_original.csv`, you can analyze it by Recall Score.
 
 ### 4. Output to Rerank
 You should give output file to Rerank model to process Rerank task.
-
 
