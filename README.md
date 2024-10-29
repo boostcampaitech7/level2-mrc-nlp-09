@@ -72,7 +72,8 @@ exp-Retrieval/
 |   |   └── hybrid/
 |   ├── reader/
 |   ├── utils/
-|   └── run_retriever.py
+|   ├── run_retriever.py
+|   └── run_retriever_csv.py
 ├── .gitignore
 ├── README.md
 ├── requirements.txt
