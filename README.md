@@ -32,19 +32,16 @@ input/
     │   ├── train
     │   │   ├── dataset.arrow
     │   │   ├── dataset_info.json
-    │   │   ├── indices.arrow
     │   │   └── state.json
     │   └── validation
     │       ├── dataset.arrow
     │       ├── dataset_info.json
-    │       ├── indices.arrow
     │       └── state.json
     ├── test_dataset
     │   ├── dataset_dict.json
     │   └── validation
     │       ├── dataset.arrow
     │       ├── dataset_info.json
-    │       ├── indices.arrow
     │       └── state.json
     └── wikipedia_documents.json
 ```
